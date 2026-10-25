@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLITKIHOME — Примерочная 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+::selection{background:var(--accent);color:#14171a}
+:root{
+  --bg:#101316;--bg2:#14171a;--text:#E7EBEE;--accent:#A9BCC8;
+  --dim:#7a848b;--dim2:#5a646b;
+  --panel:rgba(18,21,24,0.82);--border:rgba(231,235,238,0.10);--border2:rgba(231,235,238,0.06);
+  --hover:rgba(231,235,238,0.05);
+  --left:268px;--right:300px;--hdr:60px;--surf:76px;
+}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:'Golos Text',sans-serif;overflow:hidden}
+#three-canvas{position:fixed;inset:0;display:block;width:100vw;height:100vh}
+#vignette{position:fixed;inset:0;z-index:10;pointer-events:none;background:radial-gradient(125% 100% at 50% 42%,transparent 52%,rgba(8,10,12,.55) 100%)}
+
+/* ── LOADER ── */
+#loader{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .6s}
+#loader.gone{opacity:0;pointer-events:none}
+.ld-logo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:26px;letter-spacing:.36em;color:var(--text)}
+.ld-bar{width:200px;height:1px;background:var(--border2)}
+.ld-fill{height:100%;width:0;background:var(--accent);transition:width .3s ease}
+.ld-hint{font-size:11px;color:var(--dim);letter-spacing:.08em}
+
+/* ── HEADER ── */
+#hdr{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:60;background:rgba(16,19,22,.9);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;backdrop-filter:blur(14px)}
+.hdr-back{display:flex;align-items:center;gap:7px;color:var(--dim);text-decoration:none;font-size:13px;transition:color .2s}
+.hdr-back:hover{color:var(--accent)}
+.hdr-back svg{width:15px;height:15px}
+.hdr-sep{width:1px;height:20px;background:var(--border)}
+.hdr-logo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:19px;letter-spacing:.26em;color:var(--text)}
+.hdr-pill{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);border:1px solid rgba(169,188,200,.3);border-radius:999px;padding:3px 10px}
+.hdr-steps{margin-left:auto;font-size:11px;color:var(--dim)}
+.hdr-steps b{color:var(--accent);font-weight:600}
+
+/* ── PANELS COMMON ── */
+.panel{position:fixed;top:var(--hdr);z-index:50;background:var(--panel);backdrop-filter:blur(18px);display:flex;flex-direction:column;overflow:hidden}
+.panel-sec{padding:16px;border-bottom:1px solid var(--border2)}
+.panel-sec:last-child{border-bottom:none}
+.panel-label{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--dim2);margin-bottom:10px}
+
+/* ── LEFT PANEL ── */
+#panel-left{left:0;bottom:var(--surf);width:var(--left);border-right:1px solid var(--border);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.room-list{display:flex;flex-direction:column;gap:4px}
+.room-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--text);cursor:pointer;text-align:left;transition:background .15s,border-color .15s;width:100%}
+.room-btn:hover{background:var(--hover)}
+.room-btn.active{background:rgba(169,188,200,.09);border-color:rgba(169,188,200,.3)}
+.room-icon{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.room-icon svg{width:16px;height:16px;color:var(--dim)}
+.room-btn.active .room-icon svg{color:var(--accent)}
+.room-name{font-size:13px;font-weight:500;color:var(--text)}
+.room-dims{font-size:10px;color:var(--dim);margin-top:1px}
+.scale-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.scale-lbl{font-size:11px;color:var(--dim)}
+.scale-num{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--accent);letter-spacing:.04em}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--border);border-radius:1px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
+.seg{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.seg-btn{flex:1;padding:7px 4px;background:transparent;border:none;border-right:1px solid var(--border);color:var(--dim);font-family:'Golos Text',sans-serif;font-size:11px;cursor:pointer;transition:background .15s,color .15s}
+.seg-btn:last-child{border-right:none}
+.seg-btn.active{background:rgba(169,188,200,.12);color:var(--accent)}
+.grout-colors{display:none;gap:6px;margin-top:10px}
+.grout-swatch{width:22px;height:22px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;flex-shrink:0}
+.grout-swatch.active{border-color:var(--accent)}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.toggle-row:last-child{margin-bottom:0}
+.toggle-lbl{font-size:12px;color:var(--text)}
+.toggle{position:relative;width:34px;height:18px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-track{position:absolute;inset:0;border-radius:9px;background:rgba(255,255,255,.12);cursor:pointer;transition:background .2s}
+.toggle input:checked~.toggle-track{background:var(--accent)}
+.toggle-track::after{content:'';position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--bg);transition:transform .2s}
+.toggle input:checked~.toggle-track::after{transform:translateX(16px)}
+.clear-btn{width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Golos Text',sans-serif;font-size:12px;cursor:pointer;transition:all .2s}
+.clear-btn:hover{border-color:rgba(169,188,200,.4);color:var(--text)}
+
+/* ── RIGHT PANEL ── */
+#panel-right{right:0;bottom:var(--surf);width:var(--right);border-left:1px solid var(--border)}
+.cat-header{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--border2)}
+.cat-count{font-size:12px;color:var(--accent);font-variant-numeric:tabular-nums}
+.filter-row{display:flex;gap:4px;padding:10px 16px;border-bottom:1px solid var(--border2);overflow-x:auto;scrollbar-width:none;flex-wrap:wrap}
+.filter-row::-webkit-scrollbar{display:none}
+.fchip{padding:5px 12px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Golos Text',sans-serif;font-size:11px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.fchip.active{background:var(--accent);border-color:var(--accent);color:#14171a;font-weight:600}
+#catalog-grid{flex:1;overflow-y:auto;padding:10px;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:max-content;gap:6px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.tile-card{border-radius:7px;overflow:hidden;border:2px solid transparent;cursor:pointer;position:relative;transition:border-color .15s,transform .15s;background:#1a1d20}
+.tile-card:hover{transform:translateY(-2px)}
+.tile-card.active{border-color:var(--accent)}
+.tile-card img{width:100%;height:140px;object-fit:cover;display:block}
+.tile-info{padding:7px 8px}
+.tile-name{font-size:11px;font-weight:500;color:var(--text);line-height:1.3}
+.tile-brand{font-size:10px;color:var(--dim);margin-top:1px}
+.tile-check{position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--accent);color:#14171a;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center}
+.tile-card.active .tile-check{display:flex}
+
+/* ── SURFACE BAR ── */
+#surface-bar{position:fixed;bottom:0;left:var(--left);right:var(--right);height:var(--surf);z-index:50;background:rgba(16,19,22,.9);border-top:1px solid var(--border);backdrop-filter:blur(14px);display:flex;align-items:center;gap:6px;padding:0 16px}
+.surf-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim2);flex-shrink:0;margin-right:4px}
+.surf-seg{display:flex;flex:1;gap:4px}
+.surf-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 6px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;transition:all .15s;font-family:'Golos Text',sans-serif;min-width:0}
+.surf-btn:hover{background:var(--hover)}
+.surf-btn.active{border-color:rgba(169,188,200,.5);background:rgba(169,188,200,.07);color:var(--text)}
+.surf-swatch{width:32px;height:22px;border-radius:4px;background:rgba(255,255,255,.06);border:1px solid var(--border2);background-size:cover;background-position:center;flex-shrink:0}
+.surf-name{font-size:9px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+
+/* ── SEL-HINT ── */
+#sel-hint{position:fixed;top:calc(var(--hdr) + 14px);left:50%;transform:translateX(-50%);z-index:45;background:rgba(16,19,22,.78);border:1px solid var(--border);border-radius:20px;padding:5px 16px;font-size:11px;color:var(--accent);letter-spacing:.06em;backdrop-filter:blur(8px);pointer-events:none;white-space:nowrap}
+
+/* ── VIEWPOINTS ── */
+#viewpoints{position:fixed;top:calc(var(--hdr) + 16px);right:calc(var(--right) + 12px);z-index:45;display:flex;flex-direction:column;gap:4px}
+.vp-btn{width:40px;height:40px;border-radius:8px;border:1px solid var(--border);background:rgba(16,19,22,.72);color:var(--dim);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:all .15s;backdrop-filter:blur(8px)}
+.vp-btn:hover{border-color:var(--border);color:var(--text);background:rgba(18,21,24,.9)}
+.vp-btn.active{border-color:rgba(169,188,200,.4);color:var(--accent);background:rgba(169,188,200,.08)}
+.vp-btn svg{width:16px;height:16px}
+.vp-label{font-size:7px;letter-spacing:.06em;font-family:'Golos Text',sans-serif}
+
+/* ── LOOKS ── */
+#looks{position:fixed;bottom:calc(var(--surf) + 16px);left:calc(var(--left) + 16px);z-index:45;display:flex;align-items:center;gap:8px}
+#save-look-btn{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(16,19,22,.82);color:var(--dim);font-family:'Golos Text',sans-serif;font-size:11px;cursor:pointer;backdrop-filter:blur(8px);transition:all .15s;white-space:nowrap}
+#save-look-btn:hover{border-color:rgba(169,188,200,.3);color:var(--text)}
+#save-look-btn svg{width:13px;height:13px}
+#looks-strip{display:flex;gap:5px}
+.look-thumb{position:relative;width:58px;height:46px;border-radius:6px;overflow:hidden;cursor:pointer;border:1px solid var(--border);transition:border-color .15s;flex-shrink:0}
+.look-thumb:hover{border-color:rgba(169,188,200,.4)}
+.look-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.look-del{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,.7);border:none;color:#fff;font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center;line-height:1;padding:0}
+.look-thumb:hover .look-del{display:flex}
+#compare-btn{display:none;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;border:1px solid rgba(169,188,200,.25);background:rgba(16,19,22,.82);color:var(--accent);font-family:'Golos Text',sans-serif;font-size:11px;cursor:pointer;backdrop-filter:blur(8px);transition:all .15s;white-space:nowrap}
+#compare-btn:hover{border-color:rgba(169,188,200,.5)}
+#compare-btn svg{width:13px;height:13px}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:calc(var(--surf) + 14px);left:50%;transform:translateX(-50%) translateY(12px);z-index:80;background:rgba(18,21,24,.96);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;backdrop-filter:blur(18px);min-width:280px}
+#toast.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.toast-img{width:40px;height:52px;border-radius:5px;object-fit:cover;flex-shrink:0}
+.toast-body{flex:1;min-width:0}
+.toast-label{font-size:10px;color:var(--dim);letter-spacing:.06em;margin-bottom:2px}
+.toast-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast-sub{font-size:10px;color:var(--dim);margin-top:1px}
+.toast-wa{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;background:#25D366;color:#fff;text-decoration:none;font-size:12px;font-weight:600;flex-shrink:0;transition:opacity .2s}
+.toast-wa:hover{opacity:.85}
+.toast-wa svg{width:14px;height:14px}
+.toast-close{width:22px;height:22px;border-radius:50%;background:var(--hover);border:none;color:var(--dim);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:color .15s}
+.toast-close:hover{color:var(--text)}
+
+/* ── COMPARE MODAL ── */
+#compare-modal{position:fixed;inset:0;z-index:200;background:rgba(8,10,12,.88);display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)}
+#compare-modal.open{display:flex}
+.cmp-box{background:rgba(18,21,24,.98);border:1px solid var(--border);border-radius:16px;max-width:900px;width:100%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+.cmp-head{display:flex;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border2);gap:12px}
+.cmp-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:22px;color:var(--text)}
+.cmp-n{font-size:12px;color:var(--dim)}
+.cmp-close{margin-left:auto;width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:color .15s}
+.cmp-close:hover{color:var(--text)}
+#compare-cols{display:flex;gap:0;overflow:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.cmp-col{flex:1;min-width:180px;padding:16px;border-right:1px solid var(--border2)}
+.cmp-col:last-child{border-right:none}
+.cmp-img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:8px;display:block;margin-bottom:12px}
+.cmp-var{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:2px}
+.cmp-room{font-size:13px;font-weight:500;color:var(--text);margin-bottom:10px}
+.cmp-row{display:flex;justify-content:space-between;gap:6px;padding:4px 0;border-bottom:1px solid var(--border2)}
+.cmp-row:last-child{border-bottom:none}
+.cmp-key{font-size:10px;color:var(--dim);white-space:nowrap}
+.cmp-val{font-size:10px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px;text-align:right}
+
+/* ── MOBILE FALLBACK ── */
+#mobile-msg{display:none;position:fixed;inset:0;z-index:400;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:32px;text-align:center}
+.mob-logo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:24px;letter-spacing:.3em;color:var(--text)}
+.mob-text{font-size:14px;color:var(--dim);line-height:1.7;max-width:280px}
+.mob-back{display:inline-block;padding:12px 24px;border-radius:10px;border:1px solid rgba(169,188,200,.3);color:var(--text);text-decoration:none;font-size:13px;transition:border-color .2s}
+.mob-back:hover{border-color:var(--accent)}
+@media(max-width:820px){
+  #mobile-msg{display:flex}
+  #three-canvas,#vignette,#hdr,#panel-left,#panel-right,#surface-bar,#sel-hint,#viewpoints,#looks,#toast,#loader{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="ld-logo">PLITKIHOME</div>
+  <div class="ld-bar"><div class="ld-fill" id="lbar"></div></div>
+  <div class="ld-hint">Готовим примерочную</div>
+</div>
+
+<div id="mobile-msg">
+  <div class="mob-logo">PLITKIHOME</div>
+  <div class="mob-text">Примерочная 3D работает на компьютере или планшете. Зайдите с более широкого экрана.</div>
+  <a class="mob-back" href="index.html">← Вернуться на сайт</a>
+</div>
+
+<canvas id="three-canvas"></canvas>
+<div id="vignette"></div>
+
+<header id="hdr">
+  <a class="hdr-back" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    На сайт
+  </a>
+  <div class="hdr-sep"></div>
+  <div class="hdr-logo">PLITKIHOME</div>
+  <div class="hdr-pill">Примерочная</div>
+  <div class="hdr-steps hdr-steps"><b>1.</b> Выберите поверхность &nbsp;·&nbsp; <b>2.</b> Наложите плитку</div>
+</header>
+
+<aside id="panel-left" class="panel">
+  <div class="panel-sec">
+    <div class="panel-label">Помещение</div>
+    <div class="room-list" id="room-list"></div>
+  </div>
+  <div class="panel-sec">
+    <div class="panel-label">Масштаб плитки</div>
+    <div class="scale-row">
+      <span class="scale-lbl">Меньше</span>
+      <span class="scale-num" id="scale-val">×1.0</span>
+      <span class="scale-lbl">Больше</span>
+    </div>
+    <input type="range" id="scale-slider" min="0.5" max="2.0" step="0.1" value="1.0">
+  </div>
+  <div class="panel-sec">
+    <div class="panel-label">Подача</div>
+    <div class="panel-label" style="margin-bottom:6px;margin-top:0;color:var(--dim)">Затирка</div>
+    <div class="seg" id="grout-seg">
+      <button class="seg-btn active" data-val="0">Нет</button>
+      <button class="seg-btn" data-val="4">Тонкая</button>
+      <button class="seg-btn" data-val="9">Широкая</button>
+    </div>
+    <div class="grout-colors" id="grout-colors">
+      <div class="grout-swatch" data-color="#d9d5cb" style="background:#d9d5cb" title="Светлая"></div>
+      <div class="grout-swatch active" data-color="#9a978f" style="background:#9a978f" title="Средняя"></div>
+      <div class="grout-swatch" data-color="#5b5e62" style="background:#5b5e62" title="Тёмная"></div>
+      <div class="grout-swatch" data-color="#2c2e31" style="background:#2c2e31" title="Антрацит"></div>
+    </div>
+    <div style="margin-top:14px">
+      <div class="toggle-row">
+        <span class="toggle-lbl">Тени</span>
+        <label class="toggle"><input type="checkbox" id="shadows-toggle" checked><span class="toggle-track"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-lbl">Отражение пола</span>
+        <label class="toggle"><input type="checkbox" id="reflection-toggle"><span class="toggle-track"></span></label>
+      </div>
+    </div>
+  </div>
+  <div class="panel-sec">
+    <button class="clear-btn" id="clear-btn">Очистить все поверхности</button>
+  </div>
+</aside>
+
+<aside id="panel-right" class="panel">
+  <div class="cat-header">
+    <div class="panel-label" style="margin:0">Каталог</div>
+    <span class="cat-count" id="catalog-count">20</span>
+  </div>
+  <div class="filter-row" id="filter-row">
+    <button class="fchip active" data-filter="all">Все</button>
+    <button class="fchip" data-filter="marble">Мрамор</button>
+    <button class="fchip" data-filter="onyx">Оникс</button>
+    <button class="fchip" data-filter="cement">Цемент</button>
+    <button class="fchip" data-filter="stone">Камень</button>
+  </div>
+  <div id="catalog-grid"></div>
+</aside>
+
+<div id="surface-bar">
+  <span class="surf-lbl">Поверхность</span>
+  <div class="surf-seg">
+    <button class="surf-btn active" data-surf="floor"><div class="surf-swatch" id="sw-floor"></div><span class="surf-name">Пол</span></button>
+    <button class="surf-btn" data-surf="wallBack"><div class="surf-swatch" id="sw-wallBack"></div><span class="surf-name">Стена сзади</span></button>
+    <button class="surf-btn" data-surf="wallLeft"><div class="surf-swatch" id="sw-wallLeft"></div><span class="surf-name">Стена слева</span></button>
+    <button class="surf-btn" data-surf="wallRight"><div class="surf-swatch" id="sw-wallRight"></div><span class="surf-name">Стена справа</span></button>
+  </div>
+</div>
+
+<div id="sel-hint">Пол</div>
+
+<div id="viewpoints">
+  <button class="vp-btn active" data-view="overview" title="Обзор">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span class="vp-label">Обзор</span>
+  </button>
+  <button class="vp-btn" data-view="corner" title="Угол">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
+    <span class="vp-label">Угол</span>
+  </button>
+  <button class="vp-btn" data-view="front" title="Фронт">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
+    <span class="vp-label">Фронт</span>
+  </button>
+  <button class="vp-btn" data-view="top" title="Сверху">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="12" x2="16" y2="12"/></svg>
+    <span class="vp-label">Сверху</span>
+  </button>
+</div>
+
+<div id="looks">
+  <button id="save-look-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    Сохранить вид
+  </button>
+  <div id="looks-strip"></div>
+  <button id="compare-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+    Сравнить
+  </button>
+</div>
+
+<div id="toast">
+  <img class="toast-img" id="toast-img" src="" alt="">
+  <div class="toast-body">
+    <div class="toast-label">Наложено</div>
+    <div class="toast-name" id="toast-name"></div>
+    <div class="toast-sub" id="toast-sub"></div>
+  </div>
+  <a class="toast-wa" id="toast-wa" href="#" target="_blank">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Заказать
+  </a>
+  <button class="toast-close" id="toast-close">×</button>
+</div>
+
+<div id="compare-modal">
+  <div class="cmp-box">
+    <div class="cmp-head">
+      <div class="cmp-title">Сравнение видов</div>
+      <div class="cmp-n" id="compare-count"></div>
+      <button class="cmp-close" id="compare-close">×</button>
+    </div>
+    <div id="compare-cols"></div>
+  </div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+// ── КАТАЛОГ ────────────────────────────────────────────────────────────────
+const CATALOG = [
+  {id:'portoro-gold',     name:'Portoro Gold',       brand:'Atlas Concorde',    img:'assets/catalog/portoro-gold.png',        type:'marble'},
+  {id:'calacatta-oro',    name:'Calacatta Oro',       brand:'Imola',             img:'assets/catalog/calacatta-oro.jpg',       type:'marble'},
+  {id:'statuario-venato', name:'Statuario Venato',    brand:'Laminam',           img:'assets/catalog/statuario-venato.jpg',    type:'marble'},
+  {id:'statuario-nero-vena',name:'Statuario Nero Vena',brand:'Ariostea',         img:'assets/catalog/statuario-nero-vena.png', type:'marble'},
+  {id:'nero-venato',      name:'Nero Venato',         brand:'Florim',            img:'assets/catalog/nero-venato.png',         type:'marble'},
+  {id:'bianco-lasa',      name:'Bianco Lasa',         brand:'Laminam',           img:'assets/catalog/bianco-lasa.png',         type:'marble'},
+  {id:'onice-verde',      name:'Onice Verde',         brand:'Fap Ceramiche',     img:'assets/catalog/onice-verde.jpg',         type:'onyx'},
+  {id:'onice-nero',       name:'Onice Nero',          brand:'Atlas Concorde',    img:'assets/catalog/onice-nero.jpg',          type:'onyx'},
+  {id:'cemento-antracite',name:'Cemento Antracite',   brand:'Flaviker',          img:'assets/catalog/cemento-antracite.jpg',   type:'cement'},
+  {id:'onice-nuvola',     name:'Onice Nuvola',        brand:'Rex',               img:'assets/catalog/onice-nuvola.png',        type:'onyx'},
+  {id:'onice-tortora',    name:'Onice Tortora',       brand:'Cerim',             img:'assets/catalog/onice-tortora.jpg',       type:'onyx'},
+  {id:'onice-bianco',     name:'Onice Bianco',        brand:'Imola',             img:'assets/catalog/onice-bianco.jpg',        type:'onyx'},
+  {id:'cemento-grigio',   name:'Cemento Grigio',      brand:'Century',           img:'assets/catalog/cemento-grigio.jpg',      type:'cement'},
+  {id:'pietra-grey',      name:'Pietra Grey',         brand:'Casalgrande Padana',img:'assets/catalog/pietra-grey.jpg',         type:'stone'},
+  {id:'grigio-imperiale', name:'Grigio Imperiale',    brand:'Ariostea',          img:'assets/catalog/grigio-imperiale.jpg',    type:'stone'},
+  {id:'grigio-carnico',   name:'Grigio Carnico',      brand:'Laminam',           img:'assets/catalog/grigio-carnico.jpg',      type:'stone'},
+  {id:'bardiglio-scuro',  name:'Bardiglio Scuro',     brand:'Atlas Concorde',    img:'assets/catalog/bardiglio-scuro.jpg',     type:'marble'},
+  {id:'azzurro-onice',    name:'Azzurro Onice',       brand:'Fap Ceramiche',     img:'assets/catalog/azzurro-onice.jpg',       type:'onyx'},
+  {id:'blu-aurora',       name:'Blu Aurora',          brand:'Florim',            img:'assets/catalog/blu-aurora.jpg',          type:'stone'},
+  {id:'blu-reale',        name:'Blu Reale',           brand:'Rex',               img:'assets/catalog/blu-reale.jpg',           type:'stone'},
+];
+
+const ROOMS = {
+  bathroom:{ name:'Ванная',  dims:'3.6×2.8×2.6 м', icon:'bath',    w:3.6, d:2.8, h:2.6 },
+  wc:      { name:'Санузел', dims:'1.8×2.2×2.6 м', icon:'wc',      w:1.8, d:2.2, h:2.6 },
+  kitchen: { name:'Кухня',   dims:'4.2×3.4×2.6 м', icon:'kitchen', w:4.2, d:3.4, h:2.6 },
+  hall:    { name:'Холл',    dims:'2.0×5.0×2.6 м', icon:'hall',    w:2.0, d:5.0, h:2.6 },
+};
+
+const ROOM_ICONS = {
+  bath:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 12h16v4a4 4 0 01-4 4H8a4 4 0 01-4-4v-4z"/><path d="M6 12V6a2 2 0 012-2h1a2 2 0 012 2v1"/></svg>`,
+  wc:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><ellipse cx="12" cy="14" rx="7" ry="5"/><path d="M5 14V9a7 7 0 0114 0v5"/></svg>`,
+  kitchen:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 8h.01M7 12h.01M12 8h5M12 12h5"/></svg>`,
+  hall:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>`,
+};
+
+const DEFAULT_APPLIED = { floor:'statuario-venato', wallBack:'portoro-gold', wallLeft:null, wallRight:null };
+const TILE_W = 0.6, TILE_H = 1.2;
+
+const state = {
+  roomKey: 'bathroom',
+  surface: 'floor',
+  applied: { floor:null, wallBack:null, wallLeft:null, wallRight:null },
+  scale: 1.0,
+  grout: 0,
+  groutColor: '#9a978f',
+  shadows: true,
+  reflection: false,
+};
+
+// ── THREE.JS ───────────────────────────────────────────────────────────────
+const canvas = document.getElementById('three-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x101316);
+scene.fog = new THREE.Fog(0x101316, 16, 38);
+
+const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.05, 50);
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+pmrem.dispose();
+
+scene.add(new THREE.HemisphereLight(0xf4ecdf, 0x20242a, 0.55));
+scene.add(new THREE.AmbientLight(0xffeedd, 0.28));
+const keyLight = new THREE.DirectionalLight(0xfff3e4, 1.15);
+keyLight.position.set(2.5, 5, 2.4);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(2048, 2048);
+keyLight.shadow.camera.near = 0.1; keyLight.shadow.camera.far = 20;
+keyLight.shadow.bias = -0.0006;
+scene.add(keyLight);
+const fillLight = new THREE.DirectionalLight(0xcdd9e2, 0.45);
+fillLight.position.set(-3, 2.5, -2);
+scene.add(fillLight);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.maxPolarAngle = Math.PI * 0.86;
+
+// ── КОМНАТА ────────────────────────────────────────────────────────────────
+const meshes = {};
+const roomGroup = new THREE.Group();
+scene.add(roomGroup);
+
+function defaultMat(color) {
+  return new THREE.MeshStandardMaterial({ color, roughness:0.88, metalness:0.0, side:THREE.FrontSide });
+}
+
+function getRepeats(surf, room) {
+  const { w, d, h } = room;
+  const tw = TILE_W * state.scale, th = TILE_H * state.scale;
+  switch(surf) {
+    case 'floor':     return [w/th, d/tw];
+    case 'wallBack':  return [w/tw, h/th];
+    case 'wallLeft':  return [d/tw, h/th];
+    case 'wallRight': return [d/tw, h/th];
+  }
+  return [1,1];
+}
+
+function buildRoom(key) {
+  roomGroup.clear();
+  Object.keys(meshes).forEach(k => delete meshes[k]);
+  const { w, d, h } = ROOMS[key];
+  const surfs = [
+    {name:'floor',     geo:new THREE.PlaneGeometry(w,d), rot:[-Math.PI/2,0,0],   pos:[0,0,0],       color:0x1c1f22},
+    {name:'wallBack',  geo:new THREE.PlaneGeometry(w,h), rot:[0,0,0],            pos:[0,h/2,-d/2],  color:0x252830},
+    {name:'wallLeft',  geo:new THREE.PlaneGeometry(d,h), rot:[0,Math.PI/2,0],    pos:[-w/2,h/2,0],  color:0x222528},
+    {name:'wallRight', geo:new THREE.PlaneGeometry(d,h), rot:[0,-Math.PI/2,0],   pos:[w/2,h/2,0],   color:0x222528},
+    {name:'ceiling',   geo:new THREE.PlaneGeometry(w,d), rot:[Math.PI/2,0,0],    pos:[0,h,0],        color:0x2a2d32},
+  ];
+  surfs.forEach(({name,geo,rot,pos,color}) => {
+    const mesh = new THREE.Mesh(geo, defaultMat(color));
+    mesh.rotation.set(...rot);
+    mesh.position.set(...pos);
+    mesh.receiveShadow = true;
+    if (['wallBack','wallLeft','wallRight'].includes(name)) mesh.castShadow = state.shadows;
+    mesh.userData.surfName = name;
+    roomGroup.add(mesh);
+    if (name !== 'ceiling') meshes[name] = mesh;
+  });
+  Object.entries(state.applied).forEach(([surf,tile]) => { if (tile) applyTile(surf,tile,false); });
+  highlightSurface(state.surface);
+  setView(currentView, false);
+}
+
+// ── ТЕКСТУРЫ ───────────────────────────────────────────────────────────────
+const imgCache = {};
+function loadImg(src) {
+  if (!imgCache[src]) {
+    imgCache[src] = new Promise((res, rej) => {
+      const img = new Image(); img.crossOrigin = 'anonymous';
+      img.onload = () => res(img); img.onerror = rej; img.src = src;
+    });
+  }
+  return imgCache[src];
+}
+
+function buildTileTexture(htmlImg) {
+  const cw = 300, ch = 600;
+  const cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+  const ctx = cv.getContext('2d');
+  const g = state.grout;
+  if (g > 0) { ctx.fillStyle = state.groutColor; ctx.fillRect(0,0,cw,ch); }
+  ctx.drawImage(htmlImg, g, g, cw-2*g, ch-2*g);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  return tex;
+}
+
+function applyFinish(surf) {
+  const m = meshes[surf]; if (!m) return;
+  if (surf === 'floor' && state.reflection) {
+    m.material.roughness = 0.06; m.material.metalness = 0.35; m.material.envMapIntensity = 1.6;
+  } else {
+    m.material.roughness = 0.28; m.material.metalness = 0.04; m.material.envMapIntensity = 1.0;
+  }
+  m.material.needsUpdate = true;
+}
+
+const applyTokens = {};
+async function applyTile(surf, tile, updateState = true) {
+  if (updateState) state.applied[surf] = tile;
+  const mesh = meshes[surf]; if (!mesh) return;
+  mesh.material.color.set(0x3a4248); mesh.material.map = null; mesh.material.needsUpdate = true;
+  const token = Symbol(); applyTokens[surf] = token;
+  try {
+    const img = await loadImg(tile.img);
+    if (applyTokens[surf] !== token) return;
+    const [rx,ry] = getRepeats(surf, ROOMS[state.roomKey]);
+    const tex = buildTileTexture(img);
+    tex.repeat.set(rx,ry);
+    if (surf === 'floor') { tex.rotation = -Math.PI/2; tex.center.set(.5,.5); }
+    mesh.material.map = tex; mesh.material.color.set(0xffffff); mesh.material.needsUpdate = true;
+    applyFinish(surf);
+    updateSurfSwatch(surf, tile);
+  } catch(e) {
+    if (applyTokens[surf] !== token) return;
+    mesh.material.map = null; mesh.material.color.set(0x6a8090); mesh.material.needsUpdate = true;
+  }
+}
+
+async function rebuildTextures() {
+  for (const [surf,tile] of Object.entries(state.applied)) {
+    if (tile) await applyTile(surf, tile, false);
+  }
+}
+
+function setShadows(on) {
+  renderer.shadowMap.enabled = on;
+  ['wallBack','wallLeft','wallRight'].forEach(k => { if (meshes[k]) meshes[k].castShadow = on; });
+  renderer.shadowMap.needsUpdate = true;
+}
+
+function updateAllRepeats() {
+  const room = ROOMS[state.roomKey];
+  ['floor','wallBack','wallLeft','wallRight'].forEach(surf => {
+    const m = meshes[surf]; if (!m || !m.material.map) return;
+    const [rx,ry] = getRepeats(surf,room);
+    m.material.map.repeat.set(rx,ry); m.material.map.needsUpdate = true;
+  });
+}
+
+function updateSurfSwatch(surf, tile) {
+  const sw = document.getElementById(`sw-${surf}`);
+  if (sw) sw.style.backgroundImage = tile ? `url(${tile.img})` : 'none';
+}
+
+function highlightSurface(name) {
+  Object.entries(meshes).forEach(([k,m]) => {
+    if (!m.material.emissive) return;
+    m.material.emissive.set(k === name ? 0x2a343d : 0x000000);
+    m.material.emissiveIntensity = k === name ? 0.32 : 0;
+  });
+}
+
+const SURF_LABELS = { floor:'Пол', wallBack:'Стена сзади', wallLeft:'Стена слева', wallRight:'Стена справа' };
+function selectSurface(name) {
+  state.surface = name;
+  document.querySelectorAll('.surf-btn').forEach(b => b.classList.toggle('active', b.dataset.surf === name));
+  document.getElementById('sel-hint').textContent = SURF_LABELS[name] || name;
+  highlightSurface(name);
+}
+
+// ── RAYCASTER ──────────────────────────────────────────────────────────────
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let isOrbiting = false, mouseDownTime = 0;
+renderer.domElement.addEventListener('pointerdown', () => { isOrbiting = false; mouseDownTime = Date.now(); });
+renderer.domElement.addEventListener('pointermove', () => { if (Date.now()-mouseDownTime > 150) isOrbiting = true; });
+renderer.domElement.addEventListener('pointerup', e => {
+  if (isOrbiting || e.target !== renderer.domElement) return;
+  mouse.x = (e.clientX/window.innerWidth)*2-1;
+  mouse.y = -(e.clientY/window.innerHeight)*2+1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(['floor','wallBack','wallLeft','wallRight'].map(k=>meshes[k]).filter(Boolean));
+  if (hits.length) { const n = hits[0].object.userData.surfName; if (n) selectSurface(n); }
+});
+
+// ── РАКУРСЫ ────────────────────────────────────────────────────────────────
+let currentView = 'overview';
+let camAnim = null;
+
+function getViewCfg(view, room) {
+  const {w,d,h} = room;
+  const v = {
+    overview:{ pos:[w*.62,h*.62,d*.85], target:[0,h*.38,0] },
+    corner:  { pos:[w*.95,h*.42,d*.95], target:[0,h*.42,0] },
+    front:   { pos:[0,h*.5,d*.96],      target:[0,h*.5,-d*.35] },
+    top:     { pos:[w*.15,h*1.15,d*.28],target:[0,0,0] },
+  };
+  return v[view] || v.overview;
+}
+
+function setView(view, animate = true) {
+  currentView = view;
+  document.querySelectorAll('.vp-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  const cfg = getViewCfg(view, ROOMS[state.roomKey]);
+  const toP = new THREE.Vector3(...cfg.pos);
+  const toT = new THREE.Vector3(...cfg.target);
+  if (animate) {
+    camAnim = { fromP:camera.position.clone(), toP, fromT:controls.target.clone(), toT, t:0 };
+  } else {
+    camera.position.copy(toP); controls.target.copy(toT); controls.update();
+  }
+}
+
+// ── СОХРАНЕНИЕ ВИДОВ ──────────────────────────────────────────────────────
+const looks = []; let lookId = 0;
+
+function saveLook() {
+  renderer.render(scene, camera);
+  const url = canvas.toDataURL('image/jpeg', 0.7);
+  const snap = {
+    id:++lookId, url, room:state.roomKey, view:currentView,
+    applied:{...state.applied}, scale:state.scale,
+    grout:state.grout, groutColor:state.groutColor,
+    shadows:state.shadows, reflection:state.reflection,
+  };
+  looks.unshift(snap); if (looks.length > 4) looks.pop();
+  renderLooks();
+}
+
+function restoreLook(look) {
+  state.roomKey = look.room;
+  Object.assign(state, {
+    applied:{...look.applied}, scale:look.scale,
+    grout:look.grout, groutColor:look.groutColor,
+    shadows:look.shadows, reflection:look.reflection,
+  });
+  syncControls();
+  buildRoom(look.room);
+  setView(look.view, false);
+}
+
+function renderLooks() {
+  const strip = document.getElementById('looks-strip');
+  const cmpBtn = document.getElementById('compare-btn');
+  strip.innerHTML = looks.map(l => `
+    <div class="look-thumb" data-id="${l.id}">
+      <img src="${l.url}" alt="Вариант ${l.id}">
+      <button class="look-del" data-id="${l.id}">×</button>
+    </div>
+  `).join('');
+  strip.querySelectorAll('.look-thumb').forEach(el => {
+    el.addEventListener('click', e => {
+      if (e.target.classList.contains('look-del')) return;
+      const l = looks.find(x => x.id === +el.dataset.id); if (l) restoreLook(l);
+    });
+  });
+  strip.querySelectorAll('.look-del').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const i = looks.findIndex(x => x.id === +btn.dataset.id);
+      if (i !== -1) { looks.splice(i,1); renderLooks(); }
+    });
+  });
+  cmpBtn.style.display = looks.length >= 2 ? 'flex' : 'none';
+}
+
+function openCompare() {
+  const GL = {0:'Нет',4:'Тонкая',9:'Широкая'};
+  document.getElementById('compare-count').textContent = `${looks.length} варианта`;
+  document.getElementById('compare-cols').innerHTML = looks.map((l,i) => `
+    <div class="cmp-col">
+      <img class="cmp-img" src="${l.url}" alt="">
+      <div class="cmp-var">Вариант ${i+1}</div>
+      <div class="cmp-room">${ROOMS[l.room]?.name||l.room}</div>
+      ${['floor','wallBack','wallLeft','wallRight'].map(s=>`
+        <div class="cmp-row">
+          <span class="cmp-key">${SURF_LABELS[s]}</span>
+          <span class="cmp-val">${l.applied[s]?.name||'—'}</span>
+        </div>`).join('')}
+      <div class="cmp-row"><span class="cmp-key">Затирка</span><span class="cmp-val">${GL[l.grout]||'Нет'}</span></div>
+    </div>
+  `).join('');
+  document.getElementById('compare-modal').classList.add('open');
+}
+
+document.getElementById('compare-modal').addEventListener('click', e => {
+  if (e.target.id === 'compare-modal' || e.target.id === 'compare-close') {
+    document.getElementById('compare-modal').classList.remove('open');
+  }
+});
+
+// ── СИНХРОНИЗАЦИЯ UI ───────────────────────────────────────────────────────
+function syncControls() {
+  document.getElementById('scale-slider').value = state.scale;
+  document.getElementById('scale-val').textContent = `×${state.scale.toFixed(1)}`;
+  document.getElementById('shadows-toggle').checked = state.shadows;
+  document.getElementById('reflection-toggle').checked = state.reflection;
+  setShadows(state.shadows);
+  document.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', +b.dataset.val === state.grout));
+  updateGroutColorVis();
+  Object.keys(state.applied).forEach(surf => updateSurfSwatch(surf, state.applied[surf]));
+  renderRoomGrid();
+  selectSurface(state.surface);
+}
+
+function updateGroutColorVis() {
+  const el = document.getElementById('grout-colors');
+  if (el) el.style.display = state.grout > 0 ? 'flex' : 'none';
+  document.querySelectorAll('.grout-swatch').forEach(s => s.classList.toggle('active', s.dataset.color === state.groutColor));
+}
+
+// ── КАТАЛОГ UI ─────────────────────────────────────────────────────────────
+let activeFilter = 'all', activeTileId = null;
+
+function renderCatalog() {
+  const grid = document.getElementById('catalog-grid');
+  const items = activeFilter === 'all' ? CATALOG : CATALOG.filter(t => t.type === activeFilter);
+  document.getElementById('catalog-count').textContent = items.length;
+  grid.innerHTML = items.map(t => `
+    <div class="tile-card ${activeTileId===t.id?'active':''}" data-id="${t.id}">
+      <img src="${t.img}" alt="${t.name}" loading="lazy" draggable="false" onerror="this.style.opacity='.2'">
+      <div class="tile-info"><div class="tile-name">${t.name}</div><div class="tile-brand">${t.brand}</div></div>
+      <div class="tile-check">✓</div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('catalog-grid').addEventListener('click', e => {
+  const card = e.target.closest('.tile-card'); if (!card) return;
+  const tile = CATALOG.find(t => t.id === card.dataset.id); if (!tile) return;
+  activeTileId = tile.id;
+  document.querySelectorAll('#catalog-grid .tile-card').forEach(c => c.classList.toggle('active', c.dataset.id === tile.id));
+  applyTile(state.surface, tile);
+  showToast(tile);
+});
+
+document.getElementById('filter-row').addEventListener('click', e => {
+  const chip = e.target.closest('.fchip'); if (!chip) return;
+  activeFilter = chip.dataset.filter;
+  document.querySelectorAll('.fchip').forEach(c => c.classList.toggle('active', c === chip));
+  renderCatalog();
+});
+
+// ── КОМНАТЫ UI ─────────────────────────────────────────────────────────────
+function renderRoomGrid() {
+  const list = document.getElementById('room-list');
+  list.innerHTML = Object.entries(ROOMS).map(([key,r]) => `
+    <button class="room-btn ${key===state.roomKey?'active':''}" data-room="${key}">
+      <div class="room-icon">${ROOM_ICONS[r.icon]||''}</div>
+      <div><div class="room-name" style="pointer-events:none">${r.name}</div><div class="room-dims" style="pointer-events:none">${r.dims}</div></div>
+    </button>
+  `).join('');
+}
+document.getElementById('room-list').addEventListener('click', e => {
+  const btn = e.target.closest('.room-btn'); if (!btn) return;
+  state.roomKey = btn.dataset.room;
+  document.querySelectorAll('.room-btn').forEach(b => b.classList.toggle('active', b.dataset.room === state.roomKey));
+  buildRoom(state.roomKey);
+});
+
+// ── ПОВЕРХНОСТЬ BAR ────────────────────────────────────────────────────────
+document.getElementById('surface-bar').addEventListener('click', e => {
+  const btn = e.target.closest('.surf-btn'); if (!btn) return;
+  selectSurface(btn.dataset.surf);
+});
+
+// ── РАКУРСЫ ────────────────────────────────────────────────────────────────
+document.getElementById('viewpoints').addEventListener('click', e => {
+  const btn = e.target.closest('.vp-btn'); if (!btn) return;
+  setView(btn.dataset.view, true);
+});
+
+// ── СЛАЙДЕР МАСШТАБА ───────────────────────────────────────────────────────
+document.getElementById('scale-slider').addEventListener('input', e => {
+  state.scale = parseFloat(e.target.value);
+  document.getElementById('scale-val').textContent = `×${state.scale.toFixed(1)}`;
+  updateAllRepeats();
+});
+
+// ── ТЕНИ ───────────────────────────────────────────────────────────────────
+document.getElementById('shadows-toggle').addEventListener('change', e => {
+  state.shadows = e.target.checked; setShadows(state.shadows);
+});
+
+// ── ОТРАЖЕНИЕ ──────────────────────────────────────────────────────────────
+document.getElementById('reflection-toggle').addEventListener('change', e => {
+  state.reflection = e.target.checked; applyFinish('floor');
+});
+
+// ── ЗАТИРКА ────────────────────────────────────────────────────────────────
+document.getElementById('grout-seg').addEventListener('click', e => {
+  const btn = e.target.closest('.seg-btn'); if (!btn) return;
+  state.grout = +btn.dataset.val;
+  document.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+  updateGroutColorVis();
+  rebuildTextures();
+});
+document.getElementById('grout-colors').addEventListener('click', e => {
+  const sw = e.target.closest('.grout-swatch'); if (!sw) return;
+  state.groutColor = sw.dataset.color;
+  document.querySelectorAll('.grout-swatch').forEach(s => s.classList.toggle('active', s === sw));
+  if (state.grout > 0) rebuildTextures();
+});
+
+// ── ОЧИСТКА ────────────────────────────────────────────────────────────────
+document.getElementById('clear-btn').addEventListener('click', () => {
+  Object.keys(state.applied).forEach(surf => {
+    state.applied[surf] = null;
+    const m = meshes[surf]; if (!m) return;
+    m.material.map = null;
+    m.material.color.set(surf==='floor'?0x1c1f22:0x252830);
+    m.material.roughness = 0.88; m.material.metalness = 0;
+    m.material.needsUpdate = true;
+    updateSurfSwatch(surf, null);
+  });
+  activeTileId = null;
+  document.querySelectorAll('.tile-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('toast').classList.remove('show');
+});
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+function showToast(tile) {
+  document.getElementById('toast-img').src = tile.img;
+  document.getElementById('toast-name').textContent = tile.name;
+  document.getElementById('toast-sub').textContent = `${tile.brand} · 60×120 см`;
+  const text = `Здравствуйте! Хочу примерить плитку ${tile.name} (${tile.brand}) в своём интерьере. Помогите оформить заказ.`;
+  document.getElementById('toast-wa').href = `https://wa.me/79995655609?text=${encodeURIComponent(text)}`;
+  document.getElementById('toast').classList.add('show');
+}
+document.getElementById('toast-close').addEventListener('click', () => document.getElementById('toast').classList.remove('show'));
+
+// ── СОХРАНЕНИЕ ВИДОВ кнопки ────────────────────────────────────────────────
+document.getElementById('save-look-btn').addEventListener('click', saveLook);
+document.getElementById('compare-btn').addEventListener('click', openCompare);
+
+// ── RESIZE ─────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── АНИМАЦИЯ ───────────────────────────────────────────────────────────────
+function animate() {
+  requestAnimationFrame(animate);
+  if (camAnim) {
+    camAnim.t = Math.min(camAnim.t + 0.04, 1);
+    const e = camAnim.t < .5 ? 2*camAnim.t*camAnim.t : -1+(4-2*camAnim.t)*camAnim.t;
+    camera.position.lerpVectors(camAnim.fromP, camAnim.toP, e);
+    controls.target.lerpVectors(camAnim.fromT, camAnim.toT, e);
+    if (camAnim.t >= 1) camAnim = null;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+// ── ИНИЦИАЛИЗАЦИЯ ──────────────────────────────────────────────────────────
+function init() {
+  renderRoomGrid();
+  renderCatalog();
+  buildRoom(state.roomKey);
+
+  // Плитки по умолчанию
+  Object.entries(DEFAULT_APPLIED).forEach(([surf, id]) => {
+    if (!id) return;
+    const tile = CATALOG.find(t => t.id === id);
+    if (tile) applyTile(surf, tile);
+  });
+
+  selectSurface('floor');
+  updateGroutColorVis();
+  renderLooks();
+
+  // Лоадер
+  let p = 0;
+  const bar = document.getElementById('lbar');
+  const tick = setInterval(() => {
+    p = Math.min(p + Math.random() * 20, 100);
+    bar.style.width = p + '%';
+    if (p >= 100) {
+      clearInterval(tick);
+      setTimeout(() => {
+        const ld = document.getElementById('loader');
+        ld.classList.add('gone');
+        setTimeout(() => ld.remove(), 700);
+      }, 200);
+    }
+  }, 60);
+
+  animate();
+}
+
+init();
+</script>
+</body>
+</html>

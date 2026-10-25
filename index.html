@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLITKIHOME — Керамогранит премиум-класса · Дагестан</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;margin:0;padding:0}
+body{margin:0;background:#14171a;color:#E7EBEE;font-family:'Golos Text',sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+::selection{background:#A9BCC8;color:#14171a}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+/* ── BG LAYERS ── */
+.bg-base{position:fixed;inset:0;z-index:-2;background:#14171a url('assets/slate-bg-v2.jpg') center/cover no-repeat}
+.bg-grad1{position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(18,22,26,.5) 0%,rgba(14,17,20,.72) 55%,rgba(12,15,18,.82) 100%)}
+.bg-grad2{position:fixed;inset:0;z-index:-1;background:radial-gradient(120% 80% at 50% -10%,rgba(120,140,155,.10),transparent 60%)}
+#app{position:relative;z-index:1;overflow-x:hidden}
+
+/* ── HEADER ── */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:linear-gradient(180deg,rgba(15,18,21,.34),transparent);backdrop-filter:blur(3px)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;letter-spacing:.34em;color:#E7EBEE;text-decoration:none}
+.nav-desktop{display:flex;align-items:center;gap:28px}
+.nav-desktop a{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#AEB9C0;text-decoration:none;transition:color .2s}
+.nav-desktop a:hover{color:#E7EBEE}
+.nav-wa{background:linear-gradient(105deg,transparent 40%,rgba(169,188,200,.22) 50%,transparent 60%) no-repeat 100% 0 / 300% 100%;color:#E7EBEE!important;border:1px solid rgba(169,188,200,.25);border-radius:8px;padding:11px 20px;font-weight:500;font-size:12px!important;text-transform:uppercase;letter-spacing:.1em;text-decoration:none;transition:background-position .6s ease,border-color .25s}
+.nav-wa:hover{background-position:0% 0;border-color:rgba(169,188,200,.50)}
+.burger{display:none;flex-direction:column;gap:6px;cursor:pointer;background:none;border:none;padding:4px}
+.burger span{display:block;width:24px;height:1.5px;background:#E7EBEE}
+
+/* ── MOBILE MENU ── */
+.mobile-menu{position:fixed;inset:0;z-index:99;background:rgba(13,16,19,.97);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;opacity:0;pointer-events:none;transition:opacity .3s}
+.mobile-menu.open{opacity:1;pointer-events:all}
+.mobile-menu a{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:#E7EBEE;text-decoration:none;letter-spacing:.04em}
+.mobile-menu a:hover{color:#A9BCC8}
+.mobile-close{position:absolute;top:24px;right:32px;font-size:28px;color:#AEB9C0;cursor:pointer;background:none;border:none;line-height:1}
+
+/* ── SECTION LABEL ── */
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:.28em;color:#7f898f;margin-bottom:20px;font-family:'Golos Text',sans-serif}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 1s ease,transform 1s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ══════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════ */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:100px 28px 20px;overflow:hidden}
+.hero-frame{position:relative;max-width:1500px;margin:0 auto;width:100%;min-height:640px;display:flex;align-items:center;border:1px solid rgba(231,235,238,.08);border-radius:34px;overflow:hidden;background:transparent}
+.hero-photo-wrap{position:absolute;top:0;right:0;width:56%;height:100%;z-index:1;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.45) 24%,#000 58%);mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.45) 24%,#000 58%)}
+.hero-photo-img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92) brightness(.92)}
+.hero-photo-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(18,22,26,.58) 0%,rgba(18,22,26,.12) 48%,transparent 100%)}
+.hero-inner{position:relative;z-index:2;max-width:1280px;width:100%;padding:80px 72px}
+.hero-eyeline{display:flex;align-items:center;gap:18px;margin-bottom:40px}
+.hero-eyeline-line{width:46px;height:1px;background:#A9BCC8;flex-shrink:0}
+.hero-eyeline-text{font-size:11px;text-transform:uppercase;letter-spacing:.34em;color:#A9BCC8;font-family:'Golos Text',sans-serif}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(56px,5.8vw,88px);line-height:1.05;letter-spacing:-.02em;text-shadow:0 2px 50px rgba(0,0,0,.45);max-width:1100px;margin:0 0 36px}
+.hero-sub{font-size:18px;line-height:1.75;color:#C2CBD1;max-width:600px;margin:0}
+.hero-price-row{display:flex;align-items:center;gap:24px;margin-top:42px;flex-wrap:wrap}
+.hero-price-block{display:flex;flex-direction:column;gap:4px}
+.hero-price-label{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:#9aa4ab}
+.hero-price-val{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:#E7EBEE;line-height:1}
+.hero-price-val em{font-size:18px;color:#A9BCC8;font-style:normal}
+.hero-cta{display:inline-block;background:linear-gradient(105deg,transparent 40%,rgba(169,188,200,.22) 50%,transparent 60%) no-repeat 100% 0 / 300% 100%;color:#E7EBEE;border:1px solid rgba(169,188,200,.30);padding:17px 32px;border-radius:10px;font-family:'Golos Text',sans-serif;font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background-position .6s ease,border-color .25s,transform .2s,box-shadow .2s}
+.hero-cta:hover{background-position:0% 0;border-color:rgba(169,188,200,.55);transform:translateY(-2px);box-shadow:0 8px 28px rgba(169,188,200,.10)}
+
+/* ══════════════════════════════════════════════════════
+   CATALOG
+══════════════════════════════════════════════════════ */
+#catalog{scroll-margin-top:90px;padding:120px 0}
+.catalog-inner{max-width:1280px;margin:0 auto;padding:0 56px}
+.catalog-header-row{display:flex;align-items:baseline;justify-content:space-between;margin:12px 0 32px;gap:16px;flex-wrap:wrap}
+.catalog-h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:48px;line-height:1.1;margin:0;color:#E7EBEE}
+.filter-block{margin-bottom:14px}
+.filter-tabs{display:flex;gap:0;border-bottom:1px solid rgba(231,235,238,.1);margin-bottom:18px}
+.filter-tab{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:#8e979d;background:none;border:none;padding:0 0 10px;margin-right:32px;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;position:relative;top:1px}
+.filter-tab.active{color:#E7EBEE;border-bottom-color:#A9BCC8}
+.chips-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{font-size:13px;color:#AEB9C0;background:linear-gradient(105deg,transparent 40%,rgba(169,188,200,.22) 50%,transparent 60%) no-repeat 100% 0 / 300% 100%;border:1px solid rgba(169,188,200,.18);border-radius:999px;padding:6px 16px;cursor:pointer;font-family:'Golos Text',sans-serif;transition:background-position .6s ease,border-color .25s,color .25s;letter-spacing:.03em}
+.chip.active{border-color:rgba(169,188,200,.50);color:#E7EBEE}
+.chip:hover{background-position:0% 0;border-color:rgba(169,188,200,.40);color:#E7EBEE}
+.catalog-count{font-size:13px;color:#7f898f;margin:12px 0 20px;font-family:'Courier New',monospace}
+.catalog-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.tile-card{border-radius:14px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:3/4;transition:transform .3s,box-shadow .3s}
+.tile-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.tile-card img{width:100%;height:100%;object-fit:cover;display:block}
+.tile-card .tile-gradient{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(12,15,18,.85) 100%)}
+.tile-card .tile-badge{position:absolute;top:10px;left:10px;font-size:8px;text-transform:uppercase;letter-spacing:.12em;background:rgba(14,17,20,.65);backdrop-filter:blur(4px);color:#AEB9C0;border-radius:5px;padding:3px 7px}
+.tile-card .tile-expand{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;background:rgba(14,17,20,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;color:#AEB9C0;font-size:12px}
+.tile-card .tile-info{position:absolute;bottom:0;left:0;right:0;padding:12px 11px 11px}
+.tile-card .tile-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:#E7EBEE;line-height:1.1;margin:0 0 3px}
+.tile-card .tile-meta{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:#9aa4ab}
+.tile-card .tile-price{font-family:'Cormorant Garamond',serif;font-size:14px;color:#A9BCC8;margin-top:4px;letter-spacing:.02em}
+.catalog-empty-prompt{border:1px dashed rgba(231,235,238,.18);border-radius:18px;padding:64px 40px;text-align:center;display:none}
+.cep-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:#C2CBD1;margin:0 0 14px;line-height:1.2}
+.cep-sub{font-size:14px;color:#7f898f;line-height:1.75;max-width:460px;margin:0 auto}
+.no-results{text-align:center;padding:72px 0;color:#7f898f;display:none}
+.no-results p{font-size:16px;margin-bottom:20px}
+.reset-btn{background:linear-gradient(105deg,transparent 40%,rgba(169,188,200,.22) 50%,transparent 60%) no-repeat 100% 0 / 300% 100%;border:1px solid rgba(169,188,200,.18);color:#AEB9C0;border-radius:8px;padding:10px 22px;cursor:pointer;font-size:14px;font-family:'Golos Text',sans-serif;text-transform:uppercase;letter-spacing:.05em;transition:background-position .6s ease,border-color .3s,box-shadow .3s,color .2s}
+.reset-btn:hover{background-position:0% 0;border-color:rgba(169,188,200,.40);color:#E7EBEE;box-shadow:0 4px 20px rgba(169,188,200,.08)}
+
+/* ══════════════════════════════════════════════════════
+   ABOUT
+══════════════════════════════════════════════════════ */
+#about{scroll-margin-top:90px;padding:0 28px 120px}
+.about-frame{max-width:1500px;margin:0 auto;padding:64px;border:1px solid rgba(231,235,238,.08);border-radius:34px;background:transparent}
+.about-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:start;margin-top:32px}
+.about-h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:60px;line-height:1.12;margin:0 0 32px;color:#E7EBEE}
+.about-p{font-size:18px;line-height:1.85;color:#C2CBD1;margin:0 0 24px}
+.about-metrics{display:flex;gap:48px;margin-top:48px}
+.metric{display:flex;flex-direction:column;gap:8px}
+.metric-num{font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:400;color:#E7EBEE;line-height:1}
+.metric-label{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:#9aa4ab}
+.about-photo{width:100%;aspect-ratio:4/5;border-radius:18px;object-fit:cover;object-position:center 30%;box-shadow:0 30px 70px -36px rgba(6,9,12,.85);display:block;background:#1e2328}
+
+/* ══════════════════════════════════════════════════════
+   TRADE / DESIGNERS
+══════════════════════════════════════════════════════ */
+#trade{scroll-margin-top:90px}
+.trade-inner{max-width:1280px;margin:0 auto;padding:40px 56px 140px}
+.trade-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.trade-label{font-size:11px;text-transform:uppercase;letter-spacing:.32em;color:#A9BCC8;margin:0 0 16px}
+.trade-h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:48px;line-height:1.08;margin:0 0 20px;color:#EEF2F4}
+.trade-p{font-size:16px;line-height:1.7;color:#AEB9C0;margin:0 0 28px;max-width:440px}
+.trade-cta{display:inline-flex;align-items:center;gap:10px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#EEF2F4;text-decoration:none;border-bottom:1px solid rgba(231,235,238,.3);padding-bottom:7px;transition:gap .2s,border-color .2s}
+.trade-cta:hover{gap:16px;border-color:#A9BCC8}
+.trade-benefits{display:flex;flex-direction:column;gap:12px}
+.trade-benefit{border-radius:16px;border:1px solid rgba(231,235,238,.10);background:rgba(231,235,238,.02);padding:16px 26px}
+.trade-benefit h3{font-size:16px;font-weight:600;color:#EEF2F4;margin:0 0 5px;font-family:'Golos Text',sans-serif}
+.trade-benefit p{font-size:14px;line-height:1.55;color:#9aa4ab;margin:0}
+
+/* ══════════════════════════════════════════════════════
+   CALCULATOR
+══════════════════════════════════════════════════════ */
+#calc{scroll-margin-top:90px;padding:0 0 120px}
+.calc-inner{max-width:1280px;margin:0 auto;padding:0 56px}
+.calc-card{background:rgba(231,235,238,.035);border:1px solid rgba(231,235,238,.10);border-radius:22px;padding:64px}
+.calc-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start}
+.calc-h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:48px;line-height:1.1;margin:12px 0 20px;color:#E7EBEE}
+.calc-desc{font-size:15px;line-height:1.7;color:#C2CBD1;margin:0}
+.calc-form{display:flex;flex-direction:column;gap:14px}
+.calc-field{display:flex;flex-direction:column;gap:7px}
+.calc-field label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#9aa4ab}
+.calc-field input,.calc-field select{background:rgba(13,16,19,.5);border:1px solid rgba(231,235,238,.16);border-radius:10px;color:#EEF2F4;font-size:16px;padding:12px 16px;font-family:'Golos Text',sans-serif;outline:none;transition:border-color .2s;width:100%}
+.calc-field input:focus,.calc-field select:focus{border-color:rgba(169,188,200,.5)}
+.calc-field select{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a848b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.calc-field select option{background:#1a1e22;color:#E7EBEE}
+.calc-mode-tabs{display:flex;gap:8px;margin-bottom:4px}
+.calc-mode-tab{font-size:12px;color:#AEB9C0;background:linear-gradient(105deg,transparent 40%,rgba(169,188,200,.22) 50%,transparent 60%) no-repeat 100% 0 / 300% 100%;border:1px solid rgba(169,188,200,.18);border-radius:999px;padding:5px 14px;cursor:pointer;font-family:'Golos Text',sans-serif;letter-spacing:.03em;transition:background-position .6s ease,border-color .25s,color .25s}
+.calc-mode-tab.active{border-color:rgba(169,188,200,.50);color:#E7EBEE}
+.calc-mode-tab:hover{background-position:0% 0;border-color:rgba(169,188,200,.40);color:#E7EBEE}
+.calc-result-divider{height:1px;background:rgba(231,235,238,.08);margin:4px 0}
+.calc-result{background:rgba(169,188,200,.07);border:1px solid rgba(169,188,200,.18);border-radius:14px;padding:28px;margin-top:8px;display:none}
+.calc-result.show{display:block}
+.calc-result-row{display:flex;flex-direction:column;gap:4px;margin-bottom:20px}
+.calc-result-row:last-child{margin-bottom:0}
+.calc-result-label{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#9aa4ab}
+.calc-result-val{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:#E7EBEE;line-height:1.1}
+.calc-result-cost{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#A9BCC8;line-height:1.1}
+.calc-wa-btn{margin-top:16px;display:inline-block;background:#E7EBEE;color:#14171a;border-radius:10px;padding:14px 24px;font-size:15px;font-weight:600;text-decoration:none;transition:opacity .2s}
+.calc-wa-btn:hover{opacity:.85}
+
+/* ══════════════════════════════════════════════════════
+   ATMOSPHERE (id=gallery сохранён для якоря nav)
+══════════════════════════════════════════════════════ */
+#gallery{scroll-margin-top:90px;padding:0 0 120px}
+.atmo-inner{max-width:1280px;margin:0 auto;padding:0 56px}
+.atmo-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:206px;gap:14px;margin-top:24px}
+.atmo-card{border-radius:16px;overflow:hidden;cursor:pointer;position:relative}
+.atmo-card:hover .atmo-img{transform:scale(1.06)}
+.atmo-img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;display:block}
+.atmo-card .atmo-grad{position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(10,12,15,.82) 100%)}
+.atmo-card .atmo-info{position:absolute;bottom:0;left:0;right:0;padding:14px 16px}
+.atmo-label{font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:#A9BCC8;margin-bottom:4px}
+.atmo-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:#E7EBEE;line-height:1.1}
+.atmo-span22{grid-column:span 2;grid-row:span 2}
+.atmo-span21{grid-column:span 2}
+
+/* ══════════════════════════════════════════════════════
+   PROJECTS
+══════════════════════════════════════════════════════ */
+#projects{scroll-margin-top:90px;padding:50px 28px 90px;max-width:1500px;margin:0 auto}
+.projects-frame{padding:64px;border:1px solid rgba(231,235,238,.08);border-radius:34px}
+.projects-h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:48px;line-height:1.1;margin:12px 0 32px;color:#E7EBEE}
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.project-card{border-radius:12px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:4/3;transition:box-shadow .3s}
+.project-card:hover .project-img{transform:scale(1.05)}
+.project-card:hover{box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.project-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease}
+.project-card .proj-grad{position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(10,12,15,.85) 100%)}
+.project-card .proj-expand{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(14,17,20,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;color:#AEB9C0;font-size:15px}
+.project-card .proj-info{position:absolute;bottom:0;left:0;right:0;padding:20px 20px 18px}
+.project-card .proj-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:#E7EBEE;margin:0 0 4px}
+.project-card .proj-sub{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#A9BCC8}
+
+/* ══════════════════════════════════════════════════════
+   TRYON
+══════════════════════════════════════════════════════ */
+#tryon{scroll-margin-top:90px;padding:0 0 120px}
+.tryon-inner{max-width:1280px;margin:0 auto;padding:0 56px}
+.tryon-card{padding:72px 56px;text-align:center}
+.tryon-badge{display:inline-block;font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:#A9BCC8;background:rgba(169,188,200,.12);border-radius:999px;padding:5px 16px;margin-bottom:20px}
+.tryon-h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:48px;line-height:1.1;margin:0 0 20px;color:#E7EBEE}
+.tryon-p{font-size:16px;line-height:1.7;color:#C2CBD1;max-width:560px;margin:0 auto 28px}
+
+/* ══════════════════════════════════════════════════════
+   BRANDS — компактный пресс-волл
+══════════════════════════════════════════════════════ */
+#brands{scroll-margin-top:90px;padding:0 0 120px}
+.brands-inner{max-width:1600px;margin:0 auto;padding:0 56px}
+.brands-desc{font-size:16px;line-height:1.7;color:#C2CBD1;max-width:580px;margin:0 0 32px}
+.brands-h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:48px;line-height:1.1;margin:12px 0 18px;color:#E7EBEE}
+.brands-wall{border:1px solid rgba(231,235,238,.10);border-radius:20px;background:rgba(231,235,238,.02);padding:16px;display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.brand-tile{display:flex;align-items:center;justify-content:center;width:calc((100% - 81px)/10);height:50px;background:#dfe4e7;opacity:.9;border-radius:10px;text-decoration:none;transition:transform .2s,box-shadow .2s,opacity .2s;overflow:hidden;flex-shrink:0;border:1px solid rgba(255,255,255,.08)}
+.brand-tile:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3);opacity:1}
+.brand-tile img{width:86%;height:60%;object-fit:contain}
+.brand-tile.fill img{width:100%;height:100%;object-fit:cover}
+.brand-tile.big-logo img{height:80%;width:86%}
+.brand-tile-text{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;color:#14171a;text-align:center;padding:6px;letter-spacing:.04em}
+
+/* ══════════════════════════════════════════════════════
+   CONTACTS
+══════════════════════════════════════════════════════ */
+#contacts{scroll-margin-top:90px;padding:0 0 0}
+.contacts-inner{max-width:1280px;margin:0 auto;padding:80px 56px 64px;text-align:center}
+.contacts-h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:64px;line-height:1.1;margin:12px 0 48px;color:#E7EBEE}
+.contacts-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.contact-btn-fill{display:inline-block;background:#E7EBEE;color:#14171a;border-radius:10px;padding:16px 32px;font-size:16px;font-weight:600;text-decoration:none;transition:opacity .2s}
+.contact-btn-fill:hover{opacity:.85}
+.contact-btn-outline{display:inline-block;background:linear-gradient(105deg,transparent 40%,rgba(169,188,200,.22) 50%,transparent 60%) no-repeat 100% 0 / 300% 100%;color:#C2CBD1;border:1px solid rgba(169,188,200,.18);border-radius:10px;padding:16px 32px;font-size:16px;font-weight:500;text-decoration:none;letter-spacing:.02em;transition:background-position .6s ease,border-color .3s,box-shadow .3s,color .2s}
+.contact-btn-outline:hover{background-position:0% 0;border-color:rgba(169,188,200,.40);color:#E7EBEE;box-shadow:0 4px 20px rgba(169,188,200,.08)}
+
+/* ── FOOTER ── */
+.site-footer{max-width:1280px;margin:0 auto;padding:32px 56px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(231,235,238,.08);margin-top:48px}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;letter-spacing:.3em;color:#7f898f}
+.footer-copy{font-size:12px;color:#7f898f;letter-spacing:.06em}
+
+/* ── FLOATING WA ── */
+.floating-wa{position:fixed;right:26px;bottom:26px;z-index:100;width:58px;height:58px;border-radius:50%;background:linear-gradient(105deg,transparent 40%,rgba(169,188,200,.25) 50%,transparent 60%) no-repeat 100% 0 / 300% 100%;border:1px solid rgba(169,188,200,.22);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:background-position .6s ease,border-color .25s,box-shadow .25s}
+.floating-wa:hover{background-position:0% 0;border-color:rgba(169,188,200,.45);box-shadow:0 4px 20px rgba(169,188,200,.12)}
+.floating-wa svg{width:28px;height:28px}
+/* ── TRYON BTN ── */
+.btn-tryon{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:10px;background:linear-gradient(105deg,transparent 40%,rgba(169,188,200,.22) 50%,transparent 60%) no-repeat 100% 0 / 300% 100%;border:1px solid rgba(169,188,200,.18);color:#C2CBD1;text-decoration:none;font-family:'Golos Text',sans-serif;font-size:15px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;transition:background-position .6s ease,border-color .3s,box-shadow .3s,color .2s}
+.btn-tryon:hover{background-position:0% 0;border-color:rgba(169,188,200,.40);color:#E7EBEE;box-shadow:0 4px 20px rgba(169,188,200,.08)}
+
+/* ── LIGHTBOX ── */
+.lightbox{position:fixed;inset:0;z-index:200;background:rgba(8,10,12,.86);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:24px}
+.lightbox.open{display:flex}
+.lightbox-close{position:absolute;top:20px;right:24px;font-size:30px;color:#9aa4ab;cursor:pointer;background:none;border:none;line-height:1;transition:color .2s}
+.lightbox-close:hover{color:#E7EBEE}
+.lb-tile-content{background:rgba(20,23,26,.6);border:1px solid rgba(231,235,238,.12);border-radius:18px;padding:26px;display:grid;grid-template-columns:1.35fr .65fr;gap:32px;max-width:1100px;width:100%;max-height:90vh;overflow:hidden}
+.lb-tile-img-wrap{position:relative;aspect-ratio:2/1;overflow:hidden;border-radius:12px;background:#0e1114}
+.lb-tile-img-wrap img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(90deg);height:min(1180px,94vw);width:auto;max-width:none}
+.lb-tile-info{display:flex;flex-direction:column;gap:0;overflow-y:auto}
+.lb-structure{font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:#A9BCC8;margin-bottom:10px}
+.lb-name{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:#E7EBEE;margin:0 0 14px;line-height:1.05}
+.lb-pattern{font-size:14px;line-height:1.6;color:#C2CBD1;margin:0 0 24px}
+.lb-table{width:100%;border-collapse:collapse;margin-bottom:28px}
+.lb-table td{padding:8px 0;font-size:13px;border-bottom:1px solid rgba(231,235,238,.07);vertical-align:top}
+.lb-table td:first-child{color:#7f898f;width:48%;padding-right:12px}
+.lb-table td:last-child{color:#E7EBEE}
+.lb-wa-btn{display:inline-block;background:#E7EBEE;color:#14171a;border-radius:10px;padding:13px 22px;font-size:14px;font-weight:600;text-decoration:none;transition:opacity .2s}
+.lb-wa-btn:hover{opacity:.85}
+.lb-photo-content{max-width:860px;width:100%;text-align:center}
+.lb-photo-content img{max-height:80vh;border-radius:14px;max-width:100%;display:block;margin:0 auto}
+.lb-photo-cap{margin-top:16px}
+.lb-photo-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:#E7EBEE}
+.lb-photo-sub{font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:#A9BCC8;margin-top:4px}
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
+@media(max-width:1080px){
+  .site-header{padding:16px 24px}
+  .nav-desktop{display:none}
+  .burger{display:flex}
+  .hero-inner{padding:120px 24px 72px}
+  .hero-h1{font-size:50px}
+  .trade-inner,.brands-inner,.catalog-inner,.calc-inner,.atmo-inner,.tryon-inner,.contacts-inner,.site-footer{padding-left:24px;padding-right:24px}
+  .hero-inner{padding:48px 32px}
+  .hero-frame{border-radius:22px;min-height:520px}
+  .projects-frame{padding:32px 24px;border-radius:22px}
+  .about-frame{padding:32px 24px;border-radius:22px}
+  .about-grid{grid-template-columns:1fr;gap:36px}
+  .trade-grid{grid-template-columns:1fr;gap:32px}
+  .catalog-grid{grid-template-columns:repeat(3,1fr)}
+  .projects-grid{grid-template-columns:1fr;gap:10px}
+  .calc-grid{grid-template-columns:1fr;gap:40px}
+  .brand-tile{width:calc((100% - 45px)/6)}
+  .lb-tile-content{grid-template-columns:1fr;max-width:500px}
+  .lb-tile-img-wrap{aspect-ratio:3/2}
+  .hero-h1,.about-h2,.trade-h2,.brands-h2,.catalog-h2,.calc-h2,.atmo-name,.projects-h2,.tryon-h2,.contacts-h1{font-size:40px}
+  .contacts-h1{font-size:44px}
+  .atmo-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:160px}
+  .atmo-span22,.atmo-span21{grid-column:span 1;grid-row:span 1}
+}
+@media(max-width:900px){
+  .hero-photo-wrap{display:none}
+}
+@media(max-width:640px){
+  .brand-tile{width:calc((100% - 36px)/5);height:46px}
+  .hero-h1{font-size:38px}
+  .catalog-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- BG LAYERS -->
+<div class="bg-base"></div>
+<div class="bg-grad1"></div>
+<div class="bg-grad2"></div>
+
+<div id="app">
+
+<!-- ══ HEADER ══════════════════════════════════════════ -->
+<header class="site-header">
+  <a href="#hero" class="logo">PLITKIHOME</a>
+  <nav class="nav-desktop">
+    <a href="#catalog">Каталог</a>
+    <a href="#about">О компании</a>
+    <a href="#trade">Дизайнерам</a>
+    <a href="#calc">Расчёт</a>
+    <a href="#gallery">Атмосфера</a>
+    <a href="#contacts">Контакты</a>
+    <a href="https://wa.me/79995655609?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%9F%D0%B8%D1%88%D1%83%20%D1%81%20%D1%81%D0%B0%D0%B9%D1%82%D0%B0%20PLITKIHOME%20%E2%80%94%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%BA%D0%B5%D1%80%D0%B0%D0%BC%D0%BE%D0%B3%D1%80%D0%B0%D0%BD%D0%B8%D1%82." target="_blank" class="nav-wa">WhatsApp</a>
+  </nav>
+  <button class="burger" id="burgerBtn" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ══ MOBILE MENU ════════════════════════════════════ -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="menuClose">✕</button>
+  <a href="#catalog" class="menu-link">Каталог</a>
+  <a href="#about" class="menu-link">О компании</a>
+  <a href="#trade" class="menu-link">Дизайнерам</a>
+  <a href="#calc" class="menu-link">Расчёт</a>
+  <a href="#gallery" class="menu-link">Атмосфера</a>
+  <a href="#contacts" class="menu-link">Контакты</a>
+</div>
+
+<!-- ══ HERO ════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-frame">
+    <div class="hero-photo-wrap">
+      <img src="assets/hero-showroom.jpg" alt="" class="hero-photo-img">
+      <div class="hero-photo-overlay"></div>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-eyeline reveal">
+        <div class="hero-eyeline-line"></div>
+        <span class="hero-eyeline-text">Керамогранит премиум-класса · Дагестан</span>
+      </div>
+      <h1 class="hero-h1 reveal">Проконсультируем и подберём<br>керамогранит для вашего<br><span style="color:#A9BCC8;font-style:italic;">проекта</span></h1>
+      <p class="hero-sub reveal">Крупноформатный керамогранит от ведущих фабрик Испании, Италии, Турции, Китая и России. С нами уже сотрудничают 250+&nbsp;дизайнеров республики.</p>
+      <div class="hero-price-row reveal">
+        <div class="hero-price-block">
+          <span class="hero-price-label">Квадратный метр</span>
+          <span class="hero-price-val">от 2&nbsp;500&nbsp;₽<em>&nbsp;/м²</em></span>
+        </div>
+        <a href="https://wa.me/79995655609?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C%20%D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D1%8B%D0%B9%20%D1%80%D0%B0%D1%81%D1%87%D0%B5%D1%82%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B0" target="_blank" class="hero-cta">Получить бесплатный расчёт</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CATALOG ══════════════════════════════════════════ -->
+<section id="catalog">
+  <div class="catalog-inner reveal">
+    <p class="section-label">Каталог</p>
+    <div class="catalog-header-row">
+      <h2 class="catalog-h2">Подберите плитку</h2>
+    </div>
+    <!-- Country tabs -->
+    <div class="filter-block">
+      <div class="filter-tabs" id="countryTabs">
+        <button class="filter-tab active" data-country="Италия">Италия</button>
+        <button class="filter-tab" data-country="Испания">Испания</button>
+        <button class="filter-tab" data-country="Китай">Китай</button>
+        <button class="filter-tab" data-country="Турция">Турция</button>
+        <button class="filter-tab" data-country="Россия">Россия</button>
+      </div>
+    </div>
+    <!-- Structure + Apps chips on same row -->
+    <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;margin-bottom:12px">
+      <div class="chips-row" id="structureChips" style="margin-bottom:0;flex-shrink:0">
+        <button class="chip" data-structure="Мрамор">Мрамор</button>
+        <button class="chip" data-structure="Оникс">Оникс</button>
+        <button class="chip" data-structure="Камень">Камень</button>
+        <button class="chip" data-structure="Бетон">Бетон</button>
+      </div>
+      <div style="width:1px;height:24px;background:rgba(231,235,238,.14);margin:0 14px;flex-shrink:0"></div>
+      <div class="chips-row" id="appsChips" style="margin-bottom:0;flex-shrink:0">
+        <button class="chip" data-app="Пол">Пол</button>
+        <button class="chip" data-app="Стена">Стена</button>
+        <button class="chip" data-app="Фасад">Фасад</button>
+        <button class="chip" data-app="Улица">Улица</button>
+      </div>
+    </div>
+    <p class="catalog-count" id="catalogCount"></p>
+    <div class="catalog-empty-prompt" id="catalogEmptyPrompt">
+      <p class="cep-title">Выберите параметры — покажем подходящие фактуры</p>
+      <p class="cep-sub">Отметьте страну, структуру или применение выше. Весь ассортимент мы не выкладываем — подбираем под ваш запрос лично.</p>
+    </div>
+    <div class="catalog-grid" id="catalogGrid"></div>
+    <div class="no-results" id="noResults">
+      <p>По выбранным фильтрам ничего не найдено</p>
+      <button class="reset-btn" id="resetFilters">Сбросить фильтры</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ═══════════════════════════════════════════ -->
+<section id="about">
+  <div class="about-frame reveal">
+    <p class="section-label">Личный менеджер</p>
+    <div class="about-grid">
+      <div>
+        <h2 class="about-h2">Нина знает, что именно нужно вашему проекту.</h2>
+        <p class="about-p">Нина — персональный менеджер по работе с дизайнерами и архитекторами. За несколько лет она стала точкой входа для 250+ специалистов Дагестана: знает каждую коллекцию от фактуры до формата и в одном разговоре определяет, что подойдёт под концепцию, бюджет и сроки.</p>
+        <p class="about-p">Прямые контракты с фабриками Италии, Испании, Турции и Китая. Физические образцы под проект, расчёт количества, сопровождение от идеи до укладки — и партнёрское вознаграждение за каждый реализованный объект.</p>
+        <div class="about-metrics">
+          <div class="metric"><span class="metric-num">40+</span><span class="metric-label">брендов в наличии</span></div>
+          <div class="metric"><span class="metric-num">250+</span><span class="metric-label">дизайнеров доверяют</span></div>
+          <div class="metric"><span class="metric-num">30+</span><span class="metric-label">успешных проектов</span></div>
+        </div>
+      </div>
+      <div>
+        <img src="assets/nina.png" alt="Нина — основатель PLITKIHOME" class="about-photo">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TRADE / DESIGNERS ══════════════════════════════ -->
+<section id="trade">
+  <div class="trade-inner reveal">
+    <div class="trade-grid">
+      <div>
+        <p class="trade-label">Дизайнерам и архитекторам</p>
+        <h2 class="trade-h2">Больше проектов — выгоднее условия.</h2>
+        <p class="trade-p">Индивидуальные цены и личная программа вознаграждения за каждый проект. Чем больше работаете с нами — тем выгоднее условия.</p>
+        <a href="https://wa.me/79995655609?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D0%9D%D0%B8%D0%BD%D0%B0!%20%D0%AF%20%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD%D0%B5%D1%80%20%2F%20%D0%B0%D1%80%D1%85%D0%B8%D1%82%D0%B5%D0%BA%D1%82%D0%BE%D1%80%20%D0%B8%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D1%83%D1%81%D0%BB%D0%BE%D0%B2%D0%B8%D1%8F%20%D0%BF%D0%B0%D1%80%D1%82%D0%BD%D1%91%D1%80%D1%81%D1%82%D0%B2%D0%B0%20%D1%81%20PLITKIHOME." target="_blank" class="trade-cta">Обсудить условия лично →</a>
+      </div>
+      <div class="trade-benefits">
+        <div class="trade-benefit">
+          <h3>Эксклюзивные бренды</h3>
+          <p>Коллекции, которых нет у других в регионе.</p>
+        </div>
+        <div class="trade-benefit">
+          <h3>Образцы под проект</h3>
+          <p>Физические образцы фактур для презентации клиенту.</p>
+        </div>
+        <div class="trade-benefit">
+          <h3>Подбор за вас</h3>
+          <p>Нина подберёт материал под концепцию, бюджет и сроки.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CALCULATOR ══════════════════════════════════════ -->
+<section id="calc">
+  <div class="calc-inner reveal">
+    <div class="calc-card">
+      <div class="calc-grid">
+        <div>
+          <p class="section-label">Расчёт проекта</p>
+          <h2 class="calc-h2">Посчитаем всё за вас</h2>
+          <p class="calc-desc">Выберите плитку из каталога — цена подставится автоматически. Укажите площадь или размеры комнаты, добавьте стоимость укладки. Получите полную смету за несколько секунд.</p>
+        </div>
+        <div>
+          <div class="calc-form">
+            <div class="calc-field">
+              <label>Плитка из каталога</label>
+              <select id="calcTilePicker">
+                <option value="">— выбрать позицию —</option>
+              </select>
+            </div>
+            <div>
+              <div class="calc-mode-tabs">
+                <button class="calc-mode-tab active" data-mode="area">Площадь, м²</button>
+                <button class="calc-mode-tab" data-mode="room">По размерам комнаты</button>
+              </div>
+              <div id="calcModeArea">
+                <div class="calc-field">
+                  <label>Площадь, м²</label>
+                  <input type="number" id="calcArea" placeholder="например, 24" min="0" step="0.1">
+                </div>
+              </div>
+              <div id="calcModeRoom" style="display:none">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                  <div class="calc-field">
+                    <label>Длина, м</label>
+                    <input type="number" id="calcLength" placeholder="6.0" min="0" step="0.1">
+                  </div>
+                  <div class="calc-field">
+                    <label>Ширина, м</label>
+                    <input type="number" id="calcWidth" placeholder="4.0" min="0" step="0.1">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="calc-field">
+                <label>Запас на подрезку, %</label>
+                <input type="number" id="calcWaste" value="10" min="0" max="50" step="1">
+              </div>
+              <div class="calc-field">
+                <label>Цена за м², ₽</label>
+                <input type="number" id="calcPrice" placeholder="из каталога или вручную" min="0" step="100">
+              </div>
+            </div>
+            <div class="calc-field">
+              <label>Укладка, ₽/м² <span style="color:#5a646b;font-weight:400;letter-spacing:0">(необязательно)</span></label>
+              <input type="number" id="calcInstall" placeholder="например, 800" min="0" step="100">
+            </div>
+            <div class="calc-result" id="calcResult">
+              <div class="calc-result-row">
+                <span class="calc-result-label">К заказу с запасом</span>
+                <span class="calc-result-val" id="calcWithWaste"></span>
+              </div>
+              <div class="calc-result-row" id="calcGlueRow">
+                <span class="calc-result-label">Клей (~5 кг/м²)</span>
+                <span class="calc-result-cost" id="calcGlue"></span>
+              </div>
+              <div class="calc-result-divider"></div>
+              <div class="calc-result-row" id="calcMaterialRow" style="display:none">
+                <span class="calc-result-label">Стоимость материала</span>
+                <span class="calc-result-cost" id="calcCost"></span>
+              </div>
+              <div class="calc-result-row" id="calcInstallRow" style="display:none">
+                <span class="calc-result-label">Стоимость укладки</span>
+                <span class="calc-result-cost" id="calcInstallCost"></span>
+              </div>
+              <div class="calc-result-row" id="calcTotalRow" style="display:none">
+                <span class="calc-result-label" style="color:#A9BCC8">Итого по проекту</span>
+                <span class="calc-result-val" id="calcTotal"></span>
+              </div>
+            </div>
+            <a href="#" class="calc-wa-btn" id="calcWaBtn" style="display:none">Обсудить расчёт с Ниной →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ АТМОСФЕРА PLITKIHOME ════════════════════════════ -->
+<section id="gallery">
+  <div class="atmo-inner reveal">
+    <p class="section-label" style="letter-spacing:.32em;color:#A9BCC8">Атмосфера PLITKIHOME</p>
+    <div class="atmo-grid" id="atmoGrid">
+      <!-- card 1: 2×2 -->
+      <div class="atmo-card atmo-span22" data-atmo="0">
+        <img src="assets/atmosphere/stands-marble.jpg" alt="Поворотные стенды" class="atmo-img">
+        <div class="atmo-grad"></div>
+        <div class="atmo-info"><div class="atmo-label">Экспозиция</div><div class="atmo-name">Поворотные стенды</div></div>
+      </div>
+      <!-- card 2: 2×1 -->
+      <div class="atmo-card atmo-span21" data-atmo="1">
+        <img src="assets/atmosphere/baldocer-stand.jpg" alt="Фактуры Baldocer" class="atmo-img">
+        <div class="atmo-grad"></div>
+        <div class="atmo-info"><div class="atmo-label">Бренды</div><div class="atmo-name">Фактуры Baldocer</div></div>
+      </div>
+      <!-- cards 3-6: 1×1 -->
+      <div class="atmo-card" data-atmo="2">
+        <img src="assets/atmosphere/large-format.jpg" alt="Крупный формат" class="atmo-img">
+        <div class="atmo-grad"></div>
+        <div class="atmo-info"><div class="atmo-label">Формат</div><div class="atmo-name">Крупный формат</div></div>
+      </div>
+      <div class="atmo-card" data-atmo="3">
+        <img src="assets/atmosphere/collections-showroom.jpg" alt="Атмосфера салона" class="atmo-img">
+        <div class="atmo-grad"></div>
+        <div class="atmo-info"><div class="atmo-label">Шоурум</div><div class="atmo-name">Атмосфера салона</div></div>
+      </div>
+      <div class="atmo-card" data-atmo="4">
+        <img src="assets/atmosphere/stone-slab.jpg" alt="Стенд stone slab" class="atmo-img">
+        <div class="atmo-grad"></div>
+        <div class="atmo-info"><div class="atmo-label">Образцы</div><div class="atmo-name">Стенд stone slab</div></div>
+      </div>
+      <div class="atmo-card" data-atmo="5">
+        <img src="assets/atmosphere/samples-wall.jpg" alt="Стена образцов" class="atmo-img">
+        <div class="atmo-grad"></div>
+        <div class="atmo-info"><div class="atmo-label">Подбор</div><div class="atmo-name">Стена образцов</div></div>
+      </div>
+      <!-- card 7: 2×1 -->
+      <div class="atmo-card atmo-span21" data-atmo="6">
+        <img src="assets/atmosphere/faucets.jpg" alt="Смесители и сантехника" class="atmo-img">
+        <div class="atmo-grad"></div>
+        <div class="atmo-info"><div class="atmo-label">Сантехника</div><div class="atmo-name">Смесители и сантехника</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROJECTS ════════════════════════════════════════ -->
+<section id="projects">
+  <div class="projects-frame reveal">
+    <p class="section-label">Реализованные проекты</p>
+    <h2 class="projects-h2">Наши работы</h2>
+    <div class="projects-grid" id="projectsGrid"></div>
+  </div>
+</section>
+
+<!-- ══ TRYON ═══════════════════════════════════════════ -->
+<section id="tryon">
+  <div class="tryon-inner reveal">
+    <div class="tryon-card">
+      <span class="tryon-badge">Новинка</span>
+      <h2 class="tryon-h2">Примерьте плитку в вашем интерьере</h2>
+      <p class="tryon-p">Выберите комнату, наложите фактуру понравившейся плитки на 3D-модель и увидите результат до заказа. Четыре типа комнат, все поверхности, ваш масштаб.</p>
+      <a href="tryon.html" class="btn-tryon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Открыть примерочную
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BRANDS ══════════════════════════════════════════ -->
+<section id="brands">
+  <div class="brands-inner reveal">
+    <p class="section-label">Работаем напрямую с фабриками</p>
+    <h2 class="brands-h2">Бренды‑партнёры</h2>
+    <p class="brands-desc">Прямые контракты с производителями Италии, Испании, Китая, Турции и России. Нажмите на бренд — откроется сайт фабрики.</p>
+    <div class="brands-wall" id="brandsWall"></div>
+  </div>
+</section>
+
+<!-- ══ CONTACTS ════════════════════════════════════════ -->
+<section id="contacts">
+  <div class="contacts-inner reveal">
+    <p class="section-label">Связаться</p>
+    <h1 class="contacts-h1">Подберём поверхность под ваш проект.</h1>
+    <div class="contacts-btns">
+      <a href="https://wa.me/79995655609?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%9F%D0%B8%D1%88%D1%83%20%D1%81%20%D1%81%D0%B0%D0%B9%D1%82%D0%B0%20PLITKIHOME." target="_blank" class="contact-btn-fill">Написать в WhatsApp</a>
+      <a href="tel:+79995655609" class="contact-btn-outline">+7 (999) 565-56-09</a>
+      <a href="https://instagram.com" target="_blank" class="contact-btn-outline">Instagram</a>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <span class="footer-logo">PLITKIHOME</span>
+    <span class="footer-copy">Керамогранит премиум-класса · Дагестан · <span id="footerYear"></span></span>
+  </footer>
+</section>
+
+</div><!-- /app -->
+
+<!-- ══ FLOATING WHATSAPP ═══════════════════════════════ -->
+<a href="https://wa.me/79995655609?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%9F%D0%B8%D1%88%D1%83%20%D1%81%20%D1%81%D0%B0%D0%B9%D1%82%D0%B0%20PLITKIHOME." target="_blank" class="floating-wa" aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 2C8.268 2 2 8.268 2 16c0 2.47.67 4.785 1.838 6.77L2 30l7.46-1.82A13.94 13.94 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2z" fill="rgba(238,242,244,.92)"/>
+    <path d="M22.7 19.3c-.3-.15-1.8-.89-2.08-.99-.28-.1-.48-.15-.68.15-.2.3-.77.99-.94 1.19-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.41-1.49-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.68-1.64-.93-2.25-.24-.59-.49-.51-.68-.52H12.6c-.2 0-.52.07-.79.37-.27.3-1.03 1.01-1.03 2.46 0 1.45 1.06 2.85 1.2 3.05.15.2 2.08 3.18 5.05 4.46.7.3 1.25.48 1.68.62.7.22 1.34.19 1.84.11.56-.08 1.73-.7 1.97-1.38.25-.68.25-1.26.17-1.38-.07-.12-.27-.2-.57-.35z" fill="#14171a"/>
+  </svg>
+</a>
+
+<!-- ══ LIGHTBOX ════════════════════════════════════════ -->
+<div class="lightbox" id="lightbox" role="dialog">
+  <button class="lightbox-close" id="lightboxClose">✕</button>
+  <div id="lightboxContent"></div>
+</div>
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────────────────
+const CATALOG = [
+  {name:'Portoro Gold',brand:'Ariostea',country:'Италия',structure:'Мрамор',apps:['Пол','Стена'],img:'assets/catalog/portoro-gold.png',pattern:'Глубокий чёрный фон с золотыми прожилками',price:8500},
+  {name:'Calacatta Oro',brand:'Atlas Concorde',country:'Италия',structure:'Мрамор',apps:['Пол','Стена'],img:'assets/catalog/calacatta-oro.jpg',pattern:'Тёплый белый с золотисто-охристыми венами',price:6800},
+  {name:'Statuario Venato',brand:'Florim',country:'Италия',structure:'Мрамор',apps:['Пол','Стена'],img:'assets/catalog/statuario-venato.jpg',pattern:'Белый фон с мягкими серыми прожилками',price:7200},
+  {name:'Statuario Nero',brand:"Sant'Agostino",country:'Италия',structure:'Мрамор',apps:['Стена'],img:'assets/catalog/statuario-nero-vena.png',pattern:'Белый фон с контрастной чёрной веной',price:7500},
+  {name:'Nero Venato',brand:'Cerdomus',country:'Италия',structure:'Мрамор',apps:['Пол','Стена'],img:'assets/catalog/nero-venato.png',pattern:'Чёрный фон с тонкими светлыми прожилками',price:5500},
+  {name:'Bianco Lasa',brand:'Fioranese',country:'Италия',structure:'Мрамор',apps:['Стена'],img:'assets/catalog/bianco-lasa.png',pattern:'Чистый белый с лёгкой серой паутинкой вен',price:6200},
+  {name:'Onice Verde',brand:'Laminam',country:'Италия',structure:'Оникс',apps:['Стена'],img:'assets/catalog/onice-verde.jpg',pattern:'Полупрозрачный зелёный оникс с золотом',price:9500},
+  {name:'Onice Nero',brand:'Flaviker',country:'Италия',structure:'Оникс',apps:['Стена'],img:'assets/catalog/onice-nero.jpg',pattern:'Дымчато-чёрный оникс с серебристыми разводами',price:7800},
+  {name:'Cemento Antracite',brand:'Ragno',country:'Италия',structure:'Бетон',apps:['Пол','Стена','Фасад'],img:'assets/catalog/cemento-antracite.jpg',pattern:'Ровный графитовый бетон с лёгкими разводами',price:4800},
+  {name:'Onice Nuvola',brand:'Porcelanosa',country:'Испания',structure:'Оникс',apps:['Стена'],img:'assets/catalog/onice-nuvola.png',pattern:'Светло-серый облачный оникс с мягкими волнами',price:7200},
+  {name:'Onice Tortora',brand:'Apavisa',country:'Испания',structure:'Оникс',apps:['Пол','Стена'],img:'assets/catalog/onice-tortora.jpg',pattern:'Серо-бежевый оникс с тёплыми золотыми венами',price:6500},
+  {name:'Onice Bianco',brand:'Peronda',country:'Испания',structure:'Оникс',apps:['Стена'],img:'assets/catalog/onice-bianco.jpg',pattern:'Молочно-белый оникс с песочными прожилками',price:5800},
+  {name:'Cemento Grigio',brand:'Grespania',country:'Испания',structure:'Бетон',apps:['Пол','Стена','Фасад'],img:'assets/catalog/cemento-grigio.jpg',pattern:'Серый бетон с равномерной матовой фактурой',price:4200},
+  {name:'Pietra Grey',brand:'Baldocer',country:'Испания',structure:'Камень',apps:['Пол','Фасад','Улица'],img:'assets/catalog/pietra-grey.jpg',pattern:'Тёмно-серый камень с природной трещиноватостью',price:5200},
+  {name:'Grigio Imperiale',brand:'Bottega Ceramica',country:'Китай',structure:'Мрамор',apps:['Пол','Стена'],img:'assets/catalog/grigio-imperiale.jpg',pattern:'Серый мрамор с белыми диагональными венами',price:2500},
+  {name:'Grigio Carnico',brand:'Nanogress',country:'Китай',structure:'Мрамор',apps:['Пол','Стена'],img:'assets/catalog/grigio-carnico.jpg',pattern:'Тёмно-серый мрамор с тонкой белой сеткой вен',price:2900},
+  {name:'Bardiglio Scuro',brand:'Basconi Home',country:'Китай',structure:'Мрамор',apps:['Пол','Стена'],img:'assets/catalog/bardiglio-scuro.jpg',pattern:'Графитовый мрамор с серебристыми прожилками',price:2500},
+  {name:'Azzurro Onice',brand:'Kutahya',country:'Турция',structure:'Оникс',apps:['Стена'],img:'assets/catalog/azzurro-onice.jpg',pattern:'Голубой оникс с белыми и охристыми слоями',price:5400},
+  {name:'Blu Aurora',brand:'Usak Seramik',country:'Турция',structure:'Мрамор',apps:['Стена'],img:'assets/catalog/blu-aurora.jpg',pattern:'Сине-серый мрамор с золотыми нитями',price:4600},
+  {name:'Blu Reale',brand:'Italon',country:'Россия',structure:'Мрамор',apps:['Пол','Стена'],img:'assets/catalog/blu-reale.jpg',pattern:'Голубой мрамор с насыщенными золотыми венами',price:4800},
+];
+
+const PROJECTS = [
+  {title:'Ванная · оникс',sub:'Onice Tortora · стена',img:'assets/interier/work-1.png'},
+  {title:'Санузел · белый оникс',sub:'Onice Nuvola · стена и пол',img:'assets/interier/work-2.png'},
+  {title:'Кухня · мрамор',sub:'Calacatta Oro · фартук',img:'assets/interier/work-3.png'},
+  {title:'Душевая · мрамор',sub:'Calacatta Oro · стена',img:'assets/interier/work-4.png'},
+  {title:'Ванная · тёплый оникс',sub:'Onice Bianco · стена',img:'assets/interier/work-5.png'},
+  {title:'Кухня · мрамор',sub:'Statuario · фартук и пол',img:'assets/interier/work-6.png'},
+];
+
+const BRANDS = [
+  {name:'Ariostea',logo:'assets/brands/ariostea.svg',url:'https://www.ariostea.it/'},
+  {name:'Del Conca',logo:'assets/brands/delconca.png',url:'https://www.delconca.com/en/'},
+  {name:'Florim',logo:'assets/brands/florim.svg',url:'https://www.florim.com/ru'},
+  {name:'Casalgrande Padana',logo:'assets/brands/casalgrande.svg',url:'https://www.casalgrandepadana.com/'},
+  {name:'Cerdomus',logo:null,url:'https://www.cerdomus.com/it/home'},
+  {name:'Fap Ceramiche',logo:'assets/brands/fap.png',url:'https://www.fapceramiche.com/'},
+  {name:'Imola',logo:'assets/brands/imola.png',url:'https://imolaceramica.com/ru/'},
+  {name:'La Fabbrica',logo:'assets/brands/lafabbrica.png',url:'https://www.lafabbrica.it/en/'},
+  {name:'Lafaenza',logo:'assets/brands/lafaenza.svg',url:'https://lafaenzaceramica.com/ru/'},
+  {name:'Laminam',logo:'assets/brands/laminam.svg',url:'https://www.laminam.com/'},
+  {name:"Sant'Agostino",logo:'assets/brands/santagostino.svg',url:'https://www.ceramicasantagostino.it/en/'},
+  {name:'Ariana',logo:'assets/brands/ariana.svg',url:'https://www.desvresariana.com/it/'},
+  {name:'Flaviker',logo:'assets/brands/flaviker.svg',url:'https://www.flavikerpisa.it/en/'},
+  {name:'Century',logo:'assets/brands/century.png',fill:true,url:'https://www.century-ceramica.it/ru/'},
+  {name:'Naxos',logo:'assets/brands/naxos.png',fill:true,url:'https://www.naxos-ceramica.it/'},
+  {name:'Atlas Concorde',logo:'assets/brands/atlasconcorde.png',url:'https://www.atlasconcorde.com/ru'},
+  {name:'Bisazza',logo:'assets/brands/bisazza.png',url:'https://www.bisazza.com/en-global'},
+  {name:'Cir',logo:'assets/brands/cir.png',fill:true,url:'https://www.cir.it/'},
+  {name:'Serenissima',logo:'assets/brands/serenissima.png',fill:true,url:'https://www.serenissima.re.it/'},
+  {name:'Ragno',logo:'assets/brands/ragno.svg',url:'https://www.ragno.it/'},
+  {name:'Fioranese',logo:'assets/brands/fioranese.png',url:'https://www.fioranese.it/en/'},
+  {name:'Living Ceramics',logo:'assets/brands/livingceramics.svg',url:'https://livingceramics.com/'},
+  {name:'Porcelanosa',logo:'assets/brands/porcelanosa.png',url:'https://www.porcelanosa.com'},
+  {name:'Baldocer',logo:'assets/brands/baldocer.png',url:'https://baldocer.com/en/'},
+  {name:'Grespania',logo:'assets/brands/grespania.png',url:'https://www.grespania.com/'},
+  {name:'Mainzu',logo:'assets/brands/mainzu.svg',url:'https://www.mainzu.com/'},
+  {name:'Equipe',logo:'assets/brands/equipe.png',url:'https://www.equipeceramicas.com'},
+  {name:'STN Ceramica',logo:'assets/brands/stn.png',url:'https://stnceramica.es/en/'},
+  {name:'Terza Dimensione',logo:'assets/brands/terzadimensione.svg',url:'https://www.terzadimensione.com/en/'},
+  {name:'Colorker',logo:'assets/brands/colorker.svg',url:'https://www.colorker.com/'},
+  {name:'Peronda',logo:'assets/brands/peronda.svg',url:'https://peronda.com/ru'},
+  {name:'Wow',logo:'assets/brands/wow.png',url:'https://www.wowdesigneu.com/'},
+  {name:'Museum',logo:'assets/brands/museum.svg',url:'https://museumsurfaces.com/ru'},
+  {name:'Aparici',logo:'assets/brands/aparici.png',url:'https://www.aparici.com/en'},
+  {name:'Harmony',logo:'assets/brands/harmony.svg',url:'https://harmonyinspire.com/ru'},
+  {name:'Apavisa',logo:'assets/brands/apavisa.png',url:'https://apavisa.com/ru'},
+  {name:'Basconi Home',logo:'assets/brands/basconi.svg',url:'https://basconihome.ru/'},
+  {name:'Bottega Ceramica',logo:'assets/brands/bottega.png',url:'https://bottegaceramica.ru/'},
+  {name:'Nanogress',logo:'assets/brands/nanogress.png',url:'http://en.nanogress.com'},
+  {name:'Kutahya',logo:'assets/brands/kutahya.svg',bigLogo:true,url:'https://ngkutahyaseramik.com.tr/en/catalogue'},
+  {name:'Usak Seramik',logo:'assets/brands/usak.png',url:'https://www.usakseramik.com/en'},
+  {name:'Italon',logo:'assets/brands/italon.svg',url:'https://www.italonceramica.ru/ru/'},
+];
+
+// ─── INIT ──────────────────────────────────────────────────────────────
+document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+// ─── MOBILE MENU ──────────────────────────────────────────────────────
+const mobileMenu = document.getElementById('mobileMenu');
+document.getElementById('burgerBtn').addEventListener('click', () => mobileMenu.classList.add('open'));
+document.getElementById('menuClose').addEventListener('click', () => mobileMenu.classList.remove('open'));
+document.querySelectorAll('.menu-link').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+// ─── BRANDS WALL ──────────────────────────────────────────────────────
+(function buildBrands() {
+  const wall = document.getElementById('brandsWall');
+  BRANDS.forEach(b => {
+    const a = document.createElement('a');
+    a.href = b.url; a.target = '_blank'; a.rel = 'noopener';
+    a.className = 'brand-tile' + (b.fill ? ' fill' : '') + (b.bigLogo ? ' big-logo' : '');
+    a.title = b.name;
+    if (b.logo) {
+      const img = document.createElement('img');
+      img.src = b.logo; img.alt = b.name;
+      img.onerror = function() {
+        this.style.display = 'none';
+        const span = document.createElement('span');
+        span.className = 'brand-tile-text'; span.textContent = b.name;
+        a.appendChild(span);
+      };
+      a.appendChild(img);
+    } else {
+      const span = document.createElement('span');
+      span.className = 'brand-tile-text'; span.textContent = b.name;
+      a.appendChild(span);
+    }
+    wall.appendChild(a);
+  });
+})();
+
+// ─── CATALOG ──────────────────────────────────────────────────────────
+let activeCountry = 'Италия', activeStructure = null, activeApp = null;
+
+function filterCatalog() {
+  if (!activeCountry && !activeStructure && !activeApp) return null; // всё пусто
+  return CATALOG.filter(t => {
+    const cok = !activeCountry || t.country === activeCountry;
+    const sok = !activeStructure || t.structure === activeStructure;
+    const aok = !activeApp || t.apps.includes(activeApp);
+    return cok && sok && aok;
+  });
+}
+
+function renderCatalog() {
+  const grid = document.getElementById('catalogGrid');
+  const noRes = document.getElementById('noResults');
+  const emptyPr = document.getElementById('catalogEmptyPrompt');
+  const count = document.getElementById('catalogCount');
+  const items = filterCatalog();
+
+  if (items === null) {
+    grid.style.display = 'none';
+    noRes.style.display = 'none';
+    emptyPr.style.display = 'block';
+    count.textContent = '';
+    return;
+  }
+  emptyPr.style.display = 'none';
+  if (items.length === 0) {
+    grid.style.display = 'none';
+    noRes.style.display = 'block';
+    count.textContent = '';
+    return;
+  }
+  grid.style.display = 'grid';
+  noRes.style.display = 'none';
+  count.textContent = 'Найдено: ' + items.length + ' · все позиции 60×120 см';
+  grid.innerHTML = '';
+  items.forEach(tile => {
+    const card = document.createElement('div');
+    card.className = 'tile-card';
+    card.innerHTML = `
+      <img src="${tile.img}" alt="${tile.name}" loading="lazy">
+      <div class="tile-gradient"></div>
+      <span class="tile-badge">${tile.structure}</span>
+      <span class="tile-expand">⤢</span>
+      <div class="tile-info">
+        <div class="tile-name">${tile.name}</div>
+        <div class="tile-meta">${tile.brand} · ${tile.apps.join(', ')}</div>
+        ${tile.price ? `<div class="tile-price">${tile.price.toLocaleString('ru-RU')} ₽/м²</div>` : ''}
+      </div>`;
+    card.addEventListener('click', () => openTileLightbox(tile));
+    grid.appendChild(card);
+  });
+}
+
+// Country tabs — toggle
+document.querySelectorAll('.filter-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const val = btn.dataset.country;
+    if (activeCountry === val) {
+      activeCountry = null;
+      btn.classList.remove('active');
+    } else {
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCountry = val;
+    }
+    renderCatalog();
+  });
+});
+
+// Structure chips — toggle
+document.querySelectorAll('#structureChips .chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const val = btn.dataset.structure;
+    if (activeStructure === val) {
+      activeStructure = null;
+      btn.classList.remove('active');
+    } else {
+      document.querySelectorAll('#structureChips .chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeStructure = val;
+    }
+    renderCatalog();
+  });
+});
+
+// Apps chips — toggle
+document.querySelectorAll('#appsChips .chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const val = btn.dataset.app;
+    if (activeApp === val) {
+      activeApp = null;
+      btn.classList.remove('active');
+    } else {
+      document.querySelectorAll('#appsChips .chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeApp = val;
+    }
+    renderCatalog();
+  });
+});
+
+// Reset → вернуть Италию по умолчанию
+document.getElementById('resetFilters').addEventListener('click', () => {
+  activeCountry = 'Италия'; activeStructure = null; activeApp = null;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.toggle('active', b.dataset.country === 'Италия'));
+  document.querySelectorAll('#structureChips .chip').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#appsChips .chip').forEach(b => b.classList.remove('active'));
+  renderCatalog();
+});
+
+renderCatalog();
+
+// ─── CALCULATOR ───────────────────────────────────────────────────────
+const calcTilePicker = document.getElementById('calcTilePicker');
+const calcArea    = document.getElementById('calcArea');
+const calcLength  = document.getElementById('calcLength');
+const calcWidth   = document.getElementById('calcWidth');
+const calcWaste   = document.getElementById('calcWaste');
+const calcPrice   = document.getElementById('calcPrice');
+const calcInstall = document.getElementById('calcInstall');
+const calcResult  = document.getElementById('calcResult');
+const calcWithWaste = document.getElementById('calcWithWaste');
+const calcGlue    = document.getElementById('calcGlue');
+const calcCost    = document.getElementById('calcCost');
+const calcInstallCost = document.getElementById('calcInstallCost');
+const calcTotal   = document.getElementById('calcTotal');
+const calcWaBtn   = document.getElementById('calcWaBtn');
+let calcMode = 'area';
+
+// Populate tile picker from CATALOG
+CATALOG.forEach(t => {
+  const opt = document.createElement('option');
+  opt.value = t.price;
+  opt.textContent = t.name + ' — ' + t.price.toLocaleString('ru-RU') + ' ₽/м²';
+  calcTilePicker.appendChild(opt);
+});
+calcTilePicker.addEventListener('change', () => {
+  if (calcTilePicker.value) {
+    calcPrice.value = calcTilePicker.value;
+  } else {
+    calcPrice.value = '';
+  }
+  updateCalc();
+});
+
+// Mode tabs
+document.querySelectorAll('.calc-mode-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    calcMode = btn.dataset.mode;
+    document.querySelectorAll('.calc-mode-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('calcModeArea').style.display = calcMode === 'area' ? 'block' : 'none';
+    document.getElementById('calcModeRoom').style.display = calcMode === 'room' ? 'block' : 'none';
+    updateCalc();
+  });
+});
+
+function updateCalc() {
+  let area;
+  if (calcMode === 'area') {
+    area = parseFloat(calcArea.value) || 0;
+  } else {
+    const len = parseFloat(calcLength.value) || 0;
+    const wid = parseFloat(calcWidth.value) || 0;
+    area = len * wid;
+  }
+  const waste   = parseFloat(calcWaste.value) || 0;
+  const price   = parseFloat(calcPrice.value) || 0;
+  const install = parseFloat(calcInstall.value) || 0;
+  if (area > 0) {
+    const withWaste = area * (1 + waste / 100);
+    calcResult.classList.add('show');
+    calcWithWaste.textContent = withWaste.toLocaleString('ru-RU', {maximumFractionDigits:2}) + ' м²';
+    const glueKg = Math.ceil(withWaste * 5);
+    const glueBags = Math.ceil(glueKg / 25);
+    calcGlue.textContent = glueKg.toLocaleString('ru-RU') + ' кг (' + glueBags + ' меш. по 25 кг)';
+    let total = 0;
+    if (price > 0) {
+      const mat = Math.round(withWaste * price);
+      total += mat;
+      document.getElementById('calcMaterialRow').style.display = 'flex';
+      calcCost.textContent = mat.toLocaleString('ru-RU') + ' ₽';
+    } else {
+      document.getElementById('calcMaterialRow').style.display = 'none';
+    }
+    if (install > 0) {
+      const inst = Math.round(withWaste * install);
+      total += inst;
+      document.getElementById('calcInstallRow').style.display = 'flex';
+      calcInstallCost.textContent = inst.toLocaleString('ru-RU') + ' ₽';
+    } else {
+      document.getElementById('calcInstallRow').style.display = 'none';
+    }
+    if (total > 0) {
+      document.getElementById('calcTotalRow').style.display = 'flex';
+      calcTotal.textContent = total.toLocaleString('ru-RU') + ' ₽';
+    } else {
+      document.getElementById('calcTotalRow').style.display = 'none';
+    }
+    calcWaBtn.style.display = 'inline-block';
+    const tileName = calcTilePicker.value ? calcTilePicker.options[calcTilePicker.selectedIndex].text.split(' —')[0] : '';
+    let msg = 'Здравствуйте, Нина! Хочу получить расчёт по проекту.\n';
+    if (tileName) msg += 'Плитка: ' + tileName + '\n';
+    msg += 'Площадь: ' + area.toLocaleString('ru-RU') + ' м², запас ' + waste + '% → к заказу ' + withWaste.toLocaleString('ru-RU',{maximumFractionDigits:2}) + ' м²\n';
+    if (price > 0) msg += 'Материал: ' + Math.round(withWaste * price).toLocaleString('ru-RU') + ' ₽\n';
+    if (install > 0) msg += 'Укладка: ' + Math.round(withWaste * install).toLocaleString('ru-RU') + ' ₽\n';
+    if (total > 0) msg += 'Итого: ~' + total.toLocaleString('ru-RU') + ' ₽';
+    calcWaBtn.href = 'https://wa.me/79995655609?text=' + encodeURIComponent(msg);
+  } else {
+    calcResult.classList.remove('show');
+    calcWaBtn.style.display = 'none';
+  }
+}
+[calcArea, calcLength, calcWidth, calcWaste, calcPrice, calcInstall].forEach(el => el && el.addEventListener('input', updateCalc));
+
+// ─── ATMOSPHERE lightbox ───────────────────────────────────────────────
+const ATMO = [
+  {label:'Экспозиция',name:'Поворотные стенды',img:'assets/atmosphere/stands-marble.jpg'},
+  {label:'Бренды',name:'Фактуры Baldocer',img:'assets/atmosphere/baldocer-stand.jpg'},
+  {label:'Формат',name:'Крупный формат',img:'assets/atmosphere/large-format.jpg'},
+  {label:'Шоурум',name:'Атмосфера салона',img:'assets/atmosphere/collections-showroom.jpg'},
+  {label:'Образцы',name:'Стенд stone slab',img:'assets/atmosphere/stone-slab.jpg'},
+  {label:'Подбор',name:'Стена образцов',img:'assets/atmosphere/samples-wall.jpg'},
+  {label:'Сантехника',name:'Смесители и сантехника',img:'assets/atmosphere/faucets.jpg'},
+];
+document.querySelectorAll('.atmo-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const idx = +card.dataset.atmo;
+    const a = ATMO[idx];
+    if (!a) return;
+    openPhotoLightbox({img:a.img, title:a.name, sub:a.label});
+  });
+});
+
+// ─── PROJECTS GRID ────────────────────────────────────────────────────
+(function buildProjects() {
+  const grid = document.getElementById('projectsGrid');
+  PROJECTS.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'project-card';
+    card.innerHTML = `<img src="${p.img}" alt="${p.title}" class="project-img" loading="lazy"><div class="proj-grad"></div><span class="proj-expand">⤢</span><div class="proj-info"><div class="proj-title">${p.title}</div><div class="proj-sub">${p.sub}</div></div>`;
+    card.addEventListener('click', () => openPhotoLightbox(p));
+    grid.appendChild(card);
+  });
+})();
+
+// ─── LIGHTBOX ─────────────────────────────────────────────────────────
+const lightbox = document.getElementById('lightbox');
+const lbContent = document.getElementById('lightboxContent');
+
+function openTileLightbox(tile) {
+  const waMsg = 'Здравствуйте! Интересует керамогранит ' + tile.name + ' (' + tile.brand + ', ' + tile.country + '), 60×120 см. Подскажите наличие и цену.';
+  lbContent.innerHTML = `
+    <div class="lb-tile-content">
+      <div class="lb-tile-img-wrap"><img src="${tile.img}" alt="${tile.name}"></div>
+      <div class="lb-tile-info">
+        <div class="lb-structure">${tile.structure}</div>
+        <div class="lb-name">${tile.name}</div>
+        <div class="lb-pattern">${tile.pattern}</div>
+        <table class="lb-table">
+          ${tile.price ? `<tr><td>Цена</td><td>${tile.price.toLocaleString('ru-RU')} ₽/м²</td></tr>` : ''}
+          <tr><td>Производитель</td><td>${tile.brand}</td></tr>
+          <tr><td>Страна</td><td>${tile.country}</td></tr>
+          <tr><td>Структура</td><td>${tile.structure}</td></tr>
+          <tr><td>Размер</td><td>60 × 120 см</td></tr>
+          <tr><td>Применение</td><td>${tile.apps.join(', ')}</td></tr>
+        </table>
+        <a href="https://wa.me/79995655609?text=${encodeURIComponent(waMsg)}" target="_blank" class="lb-wa-btn">Узнать о наличии</a>
+      </div>
+    </div>`;
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openPhotoLightbox(proj) {
+  lbContent.innerHTML = `
+    <div class="lb-photo-content">
+      <img src="${proj.img}" alt="${proj.title}">
+      <div class="lb-photo-cap">
+        <div class="lb-photo-title">${proj.title}</div>
+        <div class="lb-photo-sub">${proj.sub||''}</div>
+      </div>
+    </div>`;
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+  lbContent.innerHTML = '';
+}
+document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+lbContent.addEventListener('click', e => e.stopPropagation());
+
+// ─── SCROLL REVEAL ────────────────────────────────────────────────────
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObs.unobserve(entry.target); }
+  });
+}, {threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+</script>
+</body>
+</html>
